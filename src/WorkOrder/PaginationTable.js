@@ -1,30 +1,61 @@
 import React from 'react';
-import {BootstrapTable, DeleteButton, TableHeaderColumn} from 'react-bootstrap-table';
+import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import './../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import Workbook from 'react-excel-workbook';
-import XLSX from 'xlsx';
 import SheetJSApp from "./ImportData";
 
+ function ImportDataValidation(data, existingTableData) {
+    var counter = 0;
 
-const products = [];
-
-function addProducts(quantity) {
-    const startId = products.length;
-    for (let i = 0; i < quantity; i++) {
-        const id = startId + i;
-        products.push({
-            id: id,
-            barcode: 'Item name ' + id,
-            sampleType: 2100 + i
-
-        });
+    if (data[0][0] === '' || data[0][1] === '' || data[0][2] === '' ||  data[0][3] === ''  || data[0][4] === '' || data[0][5] === '') {
+        return { isValid : false, reason : "Header titles are not defined" };
     }
-}
 
-addProducts(4);
+    if (data[0][0].toLowerCase().replace(/ /g,'') !== 'barcode' || 
+          data[0][1].toLowerCase().replace(/ /g,'') !== 'sampletype' ||
+          data[0][2].toLowerCase().replace(/ /g,'') !== 'volume' ||
+           data[0][3].toLowerCase().replace(/ /g,'') !== 'uom' || 
+             data[0][4].toLowerCase().replace(/ /g,'') !== 'sponser' ||
+               data[0][5].toLowerCase().replace(/ /g,'') !== 'study'
+             ) {
+          return { isValid : false, reason : "Header titles are not correct. Please Update." };
+     }
+      
+     for(let i=1;i< data.length;i++) {
+        if(data[i][0] === '' || data[i][0] === undefined) {
+            return { isValid : false, reason : 'Barcode is empty in ' + (i+1) +  ' row of excel' };
+        }
+      }
+     
 
+      for(let i=1;i< data.length;i++) {
+         for(let j=1;j<data.length;j++) {
+            if (data[i][0] === data[j][0]) {
+                    if (counter > 1) {
+                         return { isValid : false, reason : "Duplicate Barcodes on " + (j+1) + " and " + (i+1) + " rows"};
+                      }
+                      counter++;
+            }
+         }
+      }
+
+    for(let i=0; i< existingTableData.length; i++) {
+        for(let j=0; j< data.length; j++) {
+                if(existingTableData[i].barcode === data[j][0]) {
+                   return { isValid : false, reason : "Duplicate Barcodes on " + (i+1) + " row of table and " + (j+1) + " row of sheet"};
+                }
+        }
+     }  
+
+      return { isValid : true, reason : "Data is as expected." };
+ }
+
+
+ var validationResult;
 
 class PaginationTable extends React.Component {
+    
+
     constructor(props) {
         super(props);
         this.state = {
@@ -36,84 +67,55 @@ class PaginationTable extends React.Component {
     }
 
     handleData(data) {
-        console.log(data);
-        this.setState({
-            DataFromXlsx : data
-        });
-        let newAddedData = [];
-       for (var i=1; i< this.state.DataFromXlsx.length;i++) {
+        validationResult = ImportDataValidation(data, this.state.submittedData);
+
+        if (validationResult.isValid) {
+          this.setState({
+              DataFromXlsx : data
+           });
+        let newAddedData = this.state.submittedData.slice();
+         for (var i=1; i< this.state.DataFromXlsx.length;i++) {
              newAddedData.push({
-                    id : newAddedData.length,
-                    barcode: this.state.DataFromXlsx[i][0],
-                    sampleType:this.state.DataFromXlsx[i][1],
-                    uom : this.state.DataFromXlsx[i][2],
-                    sponser : this.state.DataFromXlsx[i][3],
-                    study: this.state.DataFromXlsx[i][4]
+                    id : newAddedData.length +1,
+                    barcode: (this.state.DataFromXlsx[i][0]=== '') ? 'NA' : this.state.DataFromXlsx[i][0] ,
+                    volume: (this.state.DataFromXlsx[i][1]=== '') ? 'NA' : this.state.DataFromXlsx[i][1]  ,
+                    sampleType:(this.state.DataFromXlsx[i][2]=== '') ? 'NA' :  this.state.DataFromXlsx[i][2] ,
+                    uom : (this.state.DataFromXlsx[i][3]=== '') ? 'NA' : this.state.DataFromXlsx[i][3] ,
+                    sponser : (this.state.DataFromXlsx[i][4]=== '') ? 'NA' : this.state.DataFromXlsx[i][4] ,
+                    study: (this.state.DataFromXlsx[i][5]=== '') ? 'NA' : this.state.DataFromXlsx[i][5] 
                 })
-       }
+         }
 
        this.setState({
            submittedData : newAddedData
        })
+       this.props.editSubmittedData(this.state.submittedData);
+
+        }
+
+        else {
+            alert(validationResult.reason);
+        }
+   
     }
     componentWillReceiveProps(newProps) {
-        console.log("Got props");
-        console.log(newProps);
         if(newProps.submittedData!==this.state.submittedData){
-            this.setState({submittedData:newProps.submittedData});
+            this.setState({ submittedData : newProps.submittedData});
         }
-        // console.log("inside the table:" + newProps.submittedData.barcode);
-
+         
     }
 
     onAfterDeleteRow = (rowKeys) => {
-        //alert('The rowkey you drop: ' + rowKeys);
-        this.state.submittedData.splice(rowKeys[0],rowKeys.length);
+        this.state.submittedData.splice(rowKeys[0]-1,rowKeys.length);
         this.state.submittedData.map((data,index) => {
-            return data.id = index;
+            return data.id = index + 1;
         });
+        this.props.editSubmittedData(this.state.submittedData);
 
     };
 
-    onAfterInsertRow = (rowKeys) => {
-        //alert('The rowkey you drop: ' + rowKeys);
-        console.log(rowKeys);
-       // this.state.submittedData.splice(rowKeys[0],rowKeys.length);
-
-       // this.state.submittedData.map((data,index) => {
-       //     return data.id = index;
-       // })
-    };
-
-    ExcelToJSON = function() {
-
-    this.parseExcel = function(file) {
-        var reader = new FileReader();
-
-        reader.onload = function(e) {
-            var data = e.target.result();
-            var workbook = XLSX.read(data, {
-                type: 'binary'
-            });
-
-            workbook.SheetNames.forEach(function(sheetName) {
-                // Here is your object
-                var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
-                var json_object = JSON.stringify(XL_row_object);
-                console.log(json_object);
-
-            })
-
-        };
-
-        reader.onerror = function(ex) {
-            console.log(ex);
-        };
-
-        reader.readAsBinaryString(file);
-    };
-};
-
+     
+    
     render() {
         const options = {
             page: 1,  // which page you want to show as default
@@ -122,7 +124,7 @@ class PaginationTable extends React.Component {
             }, {
                 text: '10', value: 10
             }, {
-                text: 'All', value: products.length
+                text: 'All', value: this.state.submittedData.length
             }], // you can change the dropdown list for size per page
             sizePerPage: 5,  // which size per page you want to locate as default
             pageStartIndex: 1, // where to start counting the pages
@@ -134,19 +136,17 @@ class PaginationTable extends React.Component {
             paginationShowsTotal: this.renderShowsTotal,  // Accept bool or function
             paginationPosition: 'bottom',
            // deleteBtn: this.createCustomDeleteButton,
-            afterDeleteRow: this.onAfterDeleteRow,
-            afterInsertRow: this.onAfterInsertRow
+            afterDeleteRow: this.onAfterDeleteRow
             // afterDeleteRow: onAfterDeleteRow
             // default is bottom, top and both is all available
             // hideSizePerPage: true // You can hide the dropdown for sizePerPage
             // alwaysShowAllBtns: true // Always show next and previous button
             // withFirstAndLast: false > Hide the going to First and Last page button
         };
+
         const selectRowProp = {
             mode: 'checkbox',
             bgColor: 'rgba(244, 65, 54, 0.36)'
-            //onSelect: onRowSelect,
-            //onSelectAll: onSelectAll
 
         };
         return (
@@ -156,7 +156,6 @@ class PaginationTable extends React.Component {
                     options={options}
                     pagination
                     deleteRow
-                    insertRow
                     selectRow={selectRowProp}
                     trStyle={styles.tdStyle}
                     headerStyle={styles.thStyle}
@@ -180,6 +179,7 @@ class PaginationTable extends React.Component {
                                 <Workbook.Sheet data={this.state.submittedData} name="Sheet A">
                                     <Workbook.Column label="Barcode" value="barcode"  />
                                     <Workbook.Column label="Sample Type"  value="sampleType"/>
+                                    <Workbook.Column label="Volume"  value="sampleType"/>
                                     <Workbook.Column label="UOM"  value="uom"/>
                                     <Workbook.Column label="Sponcer"  value="sponser"/>
                                     <Workbook.Column label="Study"  value="study"/>

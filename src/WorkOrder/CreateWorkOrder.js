@@ -17,34 +17,44 @@ class CreateWorkOrder extends Component {
     };
     this.handleChange = this.handleChange.bind(this);
     this.onFormSubmit = this.onFormSubmit.bind(this);
+    this.editSubmittedData = this.editSubmittedData.bind(this);
   }
 
+
+  editSubmittedData(submittedData) {
+    this.setState({
+        items : submittedData
+    });
+  }
   handleChange(event) {
-      console.log(this.state.items);
     this.setState({
       [event.target.id]: event.target.value
     });
-      console.log(this.state.items);
   }
 
   onFormSubmit(event) {
-      console.log("form submition");
       let items = [...this.state.items];
-      items.push({id:items.length,
+      var isBarcodePresent = true;
+      for(let i=0;i<items.length;i++) {
+        if(items[i].barcode === this.state.barcode) {
+          alert("Barcode is already present in table. Check row " + (i+1));
+          isBarcodePresent=false;
+        }
+      }
+
+      if (isBarcodePresent) {
+
+         items.push({id:items.length +1 ,
           barcode: this.state.barcode,
           sampleType: this.state.sampleType,
           volume: this.state.volume,
           uom: this.state.uom,
           sponser: this.state.sponser,
           study: this.state.study
-      });
-    //const submittedData = { ...this.state };
-    //console.log(event.target);
-    //this.setState({
-    //  submittedData
-    //});
-
-      this.setState({
+         });
+      }
+     
+    this.setState({
           items,
           barcode: '',
           sampleType: '',
@@ -139,7 +149,7 @@ class CreateWorkOrder extends Component {
         </div>
 
         <div className="container">
-          <PaginationTable submittedData={this.state.items} />
+          <PaginationTable submittedData={this.state.items} editSubmittedData={this.editSubmittedData}/>
         </div>
 
       </div>
