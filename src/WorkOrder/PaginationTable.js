@@ -3,6 +3,7 @@ import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import './../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import Workbook from 'react-excel-workbook';
 import SheetJSApp from "./ImportData";
+import './PaginationTable.css'
 
  function ImportDataValidation(data, existingTableData) {
     var counter = 0;
@@ -77,12 +78,12 @@ class PaginationTable extends React.Component {
          for (var i=1; i< this.state.DataFromXlsx.length;i++) {
              newAddedData.push({
                     id : newAddedData.length +1,
-                    barcode: (this.state.DataFromXlsx[i][0]=== '') ? 'NA' : this.state.DataFromXlsx[i][0] ,
-                    volume: (this.state.DataFromXlsx[i][1]=== '') ? 'NA' : this.state.DataFromXlsx[i][1]  ,
-                    sampleType:(this.state.DataFromXlsx[i][2]=== '') ? 'NA' :  this.state.DataFromXlsx[i][2] ,
-                    uom : (this.state.DataFromXlsx[i][3]=== '') ? 'NA' : this.state.DataFromXlsx[i][3] ,
-                    sponser : (this.state.DataFromXlsx[i][4]=== '') ? 'NA' : this.state.DataFromXlsx[i][4] ,
-                    study: (this.state.DataFromXlsx[i][5]=== '') ? 'NA' : this.state.DataFromXlsx[i][5] 
+                    barcode: (this.state.DataFromXlsx[i][0]=== '' || this.state.DataFromXlsx[i][0]=== undefined) ? 'N/A' : this.state.DataFromXlsx[i][0] ,
+                    volume: (this.state.DataFromXlsx[i][1]=== '' || this.state.DataFromXlsx[i][1]=== undefined) ? 'N/A' : this.state.DataFromXlsx[i][1]  ,
+                    sampleType:(this.state.DataFromXlsx[i][2]=== '' || this.state.DataFromXlsx[i][2]=== undefined) ? 'N/A' :  this.state.DataFromXlsx[i][2] ,
+                    uom : (this.state.DataFromXlsx[i][3]=== '' || this.state.DataFromXlsx[i][3]=== undefined) ? 'N/A' : this.state.DataFromXlsx[i][3] ,
+                    sponser : (this.state.DataFromXlsx[i][4]=== '' || this.state.DataFromXlsx[i][4]=== undefined) ? 'N/A' : this.state.DataFromXlsx[i][4] ,
+                    study: (this.state.DataFromXlsx[i][5]=== '' || this.state.DataFromXlsx[i][5]=== undefined) ? 'N/A' : this.state.DataFromXlsx[i][5] 
                 })
          }
 
@@ -181,7 +182,7 @@ class PaginationTable extends React.Component {
                                     <Workbook.Column label="Sample Type"  value="sampleType"/>
                                     <Workbook.Column label="Volume"  value="sampleType"/>
                                     <Workbook.Column label="UOM"  value="uom"/>
-                                    <Workbook.Column label="Sponcer"  value="sponser"/>
+                                    <Workbook.Column label="Sponcer"  value="sponcer"/>
                                     <Workbook.Column label="Study"  value="study"/>
                                 </Workbook.Sheet>
 
