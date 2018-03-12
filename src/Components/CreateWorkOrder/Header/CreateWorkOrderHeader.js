@@ -1,10 +1,13 @@
 import React from 'react';
-export default class CreateWorkOrderHeader extends React.Component{
 
-	render() {
-		return (
-			    <div className="jumbotron">
-         			 <h4 className="w3-bar w3-left">PCR Aliquot Services-Create Work Order</h4>
-       			 </div>);
-	}
+const CreateWorkOrderHeader = (props) => {
+	return (
+    <div className="jumbotron">
+			<h4 className="w3-bar w3-left">
+				{props.headerTitle}
+			</h4>
+		</div>
+	);
 }
+
+export default CreateWorkOrderHeader;

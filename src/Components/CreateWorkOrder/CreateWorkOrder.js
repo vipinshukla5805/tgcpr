@@ -26,9 +26,10 @@ getFormItems (items) {
   }
 
   render() {
+    const headerTitle = 'PCR Aliquot Services-Create Work Order';
     return (
       <div>
-        <CreateWorkOrderHeader />
+        <CreateWorkOrderHeader headerTitle={headerTitle}/>
 
         <div className="container">
           <WorkOrderForm  items={this.state.items}  getFormItems={this.getFormItems}/>
