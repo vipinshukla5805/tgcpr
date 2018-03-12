@@ -22,7 +22,7 @@ class PaginationTable extends React.Component {
         this.onAfterDeleteRow = this.onAfterDeleteRow.bind(this);
         this.handleData = this.handleData.bind(this);
     }
-
+     
     handleData(data) {
         validationResult = ImportDataValidation(data, this.state.submittedData);
 

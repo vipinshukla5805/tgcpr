@@ -1,0 +1,22 @@
+.jumbotron {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    background-color: #800080c4;
+    color: white;
+   
+}
+
+.panel-body {
+    margin-left: 450px;
+}
+
+.btn-block{
+background-color: #8f316e63;
+margin-bottom: 25px;
+font-weight: bold;
+color: purple;
+}
+
+.main-body {
+	margin: 0 auto;
+}
