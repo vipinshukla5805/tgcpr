@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import './HomePage.css';
+import CreateWorkOrderHeader from "../Components/CreateWorkOrder/Header/CreateWorkOrderHeader";
 import { Link } from "react-router-dom";
 // import {Label} from 'react';
 
@@ -7,10 +8,7 @@ class HomePage extends Component {
   render() {
     return (
       <div>
-        <div className="jumbotron">
-          <h4 className="w3-bar w3-left">Home - GPCR</h4>
-        </div>
-
+        <CreateWorkOrderHeader headerTitle="Home - GPCR"/>
         <div className="panel">
           <div className="col-md-4 main-body">
 
