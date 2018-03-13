@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PaginationTable from './PaginationTable/PaginationTable';
 import './CreateWorkOrder.css';
-import CreateWorkOrderHeader from "./Header/CreateWorkOrderHeader";
+import CreateWorkOrderHeader from "../header/Header";
 import WorkOrderForm from "./WorkOrderForm/WorkOrderForm";
 
 class CreateWorkOrder extends Component {

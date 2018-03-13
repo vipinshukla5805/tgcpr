@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import './HomePage.css';
-import CreateWorkOrderHeader from "../Components/CreateWorkOrder/Header/CreateWorkOrderHeader";
+import CreateWorkOrderHeader from "../header/Header";
 import { Link } from "react-router-dom";
 // import {Label} from 'react';
 
@@ -15,10 +15,10 @@ class HomePage extends Component {
             <Link className="btn btn-block list-group-item" to="/createWorkOrder">
               Create Work Order
             </Link>
-            <Link className="btn btn-block list-group-item" to="/createWorkOrder">
+            <Link className="btn btn-block list-group-item" to="/searchWorkOrder">
               Search Work Order
             </Link>
-            <Link className="btn btn-block list-group-item" to="/createWorkOrder">
+            <Link className="btn btn-block list-group-item" to="/updateWorkOrder">
               Update Work Order
             </Link>
             <Link className="btn btn-block list-group-item" to="/createWorkOrder">

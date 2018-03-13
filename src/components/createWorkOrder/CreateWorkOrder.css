@@ -6,10 +6,7 @@
   color: white;
 }
 label.required:after {content: " *"; color: red;}
-/* background color of text fields */
-.form-control {
-  background-color:#ffa5009e;
-}
+
 .form-group.required .control-label:after {
   content:"*";
   color:red;

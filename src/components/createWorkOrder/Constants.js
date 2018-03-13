@@ -14,7 +14,7 @@ export const styles = ({
     // table header style
     thStyle: {
         textAlign: 'center',
-        backgroundColor: 'darkgrey'
+        backgroundColor: '#a06aa0c4'
     },
 
     //Bottom Container style

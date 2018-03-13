@@ -1,0 +1,15 @@
+.react-bs-table-del-btn {
+	background-color: indianred;
+	border: indianred;
+	color: white;
+}
+
+.react-bs-table-del-btn:hover {
+	background-color: red;
+	color: white;
+}
+
+.btn-primary {
+	background-color: grey;
+	border:grey;
+}
