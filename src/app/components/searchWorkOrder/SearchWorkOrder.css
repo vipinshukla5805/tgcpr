@@ -30,3 +30,9 @@
     background-color: grey;
     border-color: grey;
 }
+
+.react-bs-table table td, .react-bs-table table th {
+    overflow: visible;
+    white-space: normal;
+    overflow-wrap: break-word;
+}

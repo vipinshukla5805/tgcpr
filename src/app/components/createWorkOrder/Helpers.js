@@ -9,7 +9,7 @@ export function ImportDataValidation(data, existingTableData) {
           data[0][1].toLowerCase().replace(/ /g,'') !== 'sampletype' ||
           data[0][2].toLowerCase().replace(/ /g,'') !== 'volume' ||
            data[0][3].toLowerCase().replace(/ /g,'') !== 'uom' || 
-             data[0][4].toLowerCase().replace(/ /g,'') !== 'sponser' ||
+             data[0][4].toLowerCase().replace(/ /g,'') !== 'sponsor' ||
                data[0][5].toLowerCase().replace(/ /g,'') !== 'study'
              ) {
           return { isValid : false, reason : "Header titles are not correct. Please Update." };

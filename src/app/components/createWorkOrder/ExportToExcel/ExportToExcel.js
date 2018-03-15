@@ -13,7 +13,7 @@ class ExportToExcel extends React.Component{
                                     <Workbook.Column label="Sample Type"  value="sampleType"/>
                                     <Workbook.Column label="Volume"  value="sampleType"/>
                                     <Workbook.Column label="UOM"  value="uom"/>
-                                    <Workbook.Column label="Sponser"  value="sponser"/>
+                                    <Workbook.Column label="Sponsor"  value="sponsor"/>
                                     <Workbook.Column label="Study"  value="study"/>
                                 </Workbook.Sheet>
                              </Workbook>

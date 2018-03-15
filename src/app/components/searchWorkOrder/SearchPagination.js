@@ -10,8 +10,8 @@ function addProducts(quantity) {
         const id = startId + i;
         products.push({
             id: id,
-            barcode: 'Item name ' + id,
-            sampleType: 2100 + i
+            workOrderId: 'Item name ' + id,
+            createDate: 2100 + i,
 
         });
     }
@@ -80,17 +80,17 @@ class SearchPagination extends React.Component {
                     data={products}
                     options={options}
                     pagination
-                    deleteRow={true}
                     selectRow={selectRowProp}
                     trStyle={styles.tdStyle}
                     headerStyle={styles.thStyle}>
                     <TableHeaderColumn width="39" dataField='id' isKey={true}>#</TableHeaderColumn>
-                    <TableHeaderColumn dataField='barcode'>Parent Barcode</TableHeaderColumn>
-                    <TableHeaderColumn dataField='sampleType'>Sample Type</TableHeaderColumn>
-                    <TableHeaderColumn dataField='volume'>Volume</TableHeaderColumn>
-                    <TableHeaderColumn dataField='uom'>UOM</TableHeaderColumn>
-                    <TableHeaderColumn dataField='sponser'>Sponser</TableHeaderColumn>
-                    <TableHeaderColumn dataField='study'>Study</TableHeaderColumn>
+                    <TableHeaderColumn dataField='workOrderId'>Work Order Id</TableHeaderColumn>
+                    <TableHeaderColumn dataField='createDate'>Create Date</TableHeaderColumn>
+                    <TableHeaderColumn dataField='status'>Status</TableHeaderColumn>
+                    <TableHeaderColumn dataField='sponsor'>Sponsor</TableHeaderColumn>
+                    <TableHeaderColumn dataField='parentSamples' tdStyle={ { whiteSpace: 'normal' } }>Total # of Parent Sameples</TableHeaderColumn>
+                    <TableHeaderColumn dataField='createdBy'>Created By</TableHeaderColumn>
+                    <TableHeaderColumn dataField='aliquot'>Total # of Aliquot</TableHeaderColumn>
                 </BootstrapTable>
             </div>
 

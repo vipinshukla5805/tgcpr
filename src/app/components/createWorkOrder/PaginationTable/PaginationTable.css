@@ -13,3 +13,8 @@
 	background-color: grey;
 	border:grey;
 }
+.react-bs-table table td, .react-bs-table table th {
+	overflow: visible;
+	white-space: normal;
+	overflow-wrap: break-word;
+}

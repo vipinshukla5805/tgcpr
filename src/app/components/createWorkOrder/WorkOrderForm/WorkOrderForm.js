@@ -1,6 +1,7 @@
 import React from 'react';
 import { formStyles  } from "../Constants";
 
+const checkBarcode = [{"barcode":"kkkkk","sampleType":"Serum","sponsor":"Merck Sharp & Dohme Corp., NJ, USA","uom":"123","studyCode":"MERK0026","volumeUnit":"123","status":null}];
 export default class WorkOrderForm extends React.Component {
 	constructor(props) {
 		super(props);
@@ -10,7 +11,7 @@ export default class WorkOrderForm extends React.Component {
 		      sampleType: '',
 		      volume: '',
 		      uom: '',
-		      sponser: '',
+		      sponsor: '',
 		      study: '',
 		      submittedData: ''
          };
@@ -24,14 +25,15 @@ export default class WorkOrderForm extends React.Component {
         }
          
     }
+
 	 onFormSubmit(event) {
 	 	event.preventDefault();
        let items = [...this.state.items];
        var isBarcodePresent = true;
        for(let i=0;i<items.length;i++) {
           if(items[i].barcode === this.state.barcode) {
-        	  alert("Barcode is already present in table. Check row " + (i+1));
-          	isBarcodePresent=false;
+        	  alert("Parent Barcode is already present in table. Check row " + (i+1));
+            	isBarcodePresent=false;
            }
         }
 
@@ -42,7 +44,7 @@ export default class WorkOrderForm extends React.Component {
                     sampleType: this.state.sampleType,
                     volume: this.state.volume,
                     uom: this.state.uom,
-                    sponser: this.state.sponser,
+                    sponsor: this.state.sponsor,
                     study: this.state.study
          });
       }
@@ -53,12 +55,35 @@ export default class WorkOrderForm extends React.Component {
           sampleType: '',
           volume: '',
           uom: '',
-          sponser: '',
+          sponsor: '',
           study: '',
           submittedData: ''
       });
      this.props.getFormItems(items);
   }
+
+    findBarcodeData = (event) => {
+	  if(event.target.value === checkBarcode[0].barcode) {
+	      this.setState({
+              barcode: checkBarcode[0].barcode,
+              sampleType:checkBarcode[0].sampleType,
+              volume: checkBarcode[0].volumeUnit,
+              uom: checkBarcode[0].uom,
+              sponsor: checkBarcode[0].sponsor,
+              study: checkBarcode[0].studyCode,
+              submittedData: ''
+          });
+      } else {
+          this.setState({
+              sampleType: '',
+              volume: '',
+              uom: '',
+              sponsor: '',
+              study: '',
+              submittedData: ''
+          });
+      }
+    };
 
    handleChange(event) {
 	    this.setState({
@@ -74,7 +99,7 @@ export default class WorkOrderForm extends React.Component {
 	                <div className="form-group required">
 	                  <label className="control-label">Scan Parent Barcode</label>
 	                  <input style={formStyles.barcodeColor} type="text" className="form-control form-control-sm"
-	                    id="barcode" value={this.state.barcode} onChange={this.handleChange} placeholder="" required>
+	                    id="barcode" value={this.state.barcode} onChange={this.handleChange} onKeyUp={this.findBarcodeData} placeholder="" required>
 	                  </input>
 	                </div>
 
@@ -107,9 +132,9 @@ export default class WorkOrderForm extends React.Component {
 
 	              </div> <div className="col-sm-2">
 	                <div className="form-group required">
-	                  <label className="control-label">Sponser</label>
+	                  <label className="control-label">Sponsor</label>
 	                  <input type="text" className="form-control form-control-sm"
-	                    id="sponser" value={this.state.sponser} onChange={this.handleChange} placeholder="" required>
+	                    id="sponsor" value={this.state.sponsor} onChange={this.handleChange} placeholder="" required>
 	                  </input>
 	                </div>
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
-import '../../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
+import '../../../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import SheetJSApp from "../ImportFromExcel/ImportData";
 import './PaginationTable.css';
 import ExportToExcel from "../ExportToExcel/ExportToExcel";
@@ -38,7 +38,7 @@ class PaginationTable extends React.Component {
                     volume: (this.state.DataFromXlsx[i][1]=== '' || this.state.DataFromXlsx[i][1]=== undefined) ? 'N/A' : this.state.DataFromXlsx[i][1]  ,
                     sampleType:(this.state.DataFromXlsx[i][2]=== '' || this.state.DataFromXlsx[i][2]=== undefined) ? 'N/A' :  this.state.DataFromXlsx[i][2] ,
                     uom : (this.state.DataFromXlsx[i][3]=== '' || this.state.DataFromXlsx[i][3]=== undefined) ? 'N/A' : this.state.DataFromXlsx[i][3] ,
-                    sponser : (this.state.DataFromXlsx[i][4]=== '' || this.state.DataFromXlsx[i][4]=== undefined) ? 'N/A' : this.state.DataFromXlsx[i][4] ,
+                    sponsor : (this.state.DataFromXlsx[i][4]=== '' || this.state.DataFromXlsx[i][4]=== undefined) ? 'N/A' : this.state.DataFromXlsx[i][4] ,
                     study: (this.state.DataFromXlsx[i][5]=== '' || this.state.DataFromXlsx[i][5]=== undefined) ? 'N/A' : this.state.DataFromXlsx[i][5] 
                 })
          }
@@ -71,7 +71,7 @@ class PaginationTable extends React.Component {
 
     };
 
-     
+
     
     render() {
 
@@ -116,7 +116,7 @@ class PaginationTable extends React.Component {
                     <TableHeaderColumn dataField='sampleType'>Sample Type</TableHeaderColumn>
                     <TableHeaderColumn dataField='volume'>Volume</TableHeaderColumn>
                     <TableHeaderColumn dataField='uom'>UOM</TableHeaderColumn>
-                    <TableHeaderColumn dataField='sponser'>Sponser</TableHeaderColumn>
+                    <TableHeaderColumn dataField='sponsor'>Sponsor</TableHeaderColumn>
                     <TableHeaderColumn dataField='study'>Study</TableHeaderColumn>
                 </BootstrapTable>
 
