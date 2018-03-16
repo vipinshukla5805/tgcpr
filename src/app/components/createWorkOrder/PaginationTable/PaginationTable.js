@@ -83,7 +83,7 @@ class PaginationTable extends React.Component {
                         text: '10', value: 10
                     }, {
                         text: 'All', value: this.state.submittedData.length
-                    }], 
+                    }],
                     sizePerPage: 5,  
                     pageStartIndex: 1, 
                     paginationSize: 3, 

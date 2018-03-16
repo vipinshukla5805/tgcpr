@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Typeahead} from 'react-bootstrap-typeahead';
 
 export default class LiveSearch extends Component {
-    
+
 
     onChange = name => value =>{
          console.log(name,value);
@@ -17,7 +17,7 @@ export default class LiveSearch extends Component {
                     bsSize="small"
                     onChange={this.onChange(this.props.liveSearchDataTitle)}
                     options={this.props.liveSearchData}
-                    placeholder={this.props.liveSearchDataTitle}
+                    placeholder="None Selected"
                 />
             </div>
         );

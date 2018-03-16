@@ -36,3 +36,13 @@
     white-space: normal;
     overflow-wrap: break-word;
 }
+
+
+.btn-primary:enabled {
+    background-color: blue;
+}
+
+.btn-primary:disabled {
+    background-color: lightgray;
+    cursor: none;
+}

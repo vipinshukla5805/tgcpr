@@ -1,42 +1,105 @@
 import React from 'react';
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
-// import Workbook from 'react-excel-workbook';
+import './SearchPagination.css';
 
-const products = [];
-
-function addProducts(quantity) {
-    const startId = products.length;
-    for (let i = 0; i < quantity; i++) {
-        const id = startId + i;
-        products.push({
-            id: id,
-            workOrderId: 'Item name ' + id,
-            createDate: 2100 + i,
-
-        });
-    }
-}
-
-addProducts(5);
+let isStatusFlag = [false, false, false, false, false];
+let selectedRows = [];
 
 class SearchPagination extends React.Component {
-    // constructor(props) {     super(props); }
 
-    /* componentWillReceiveProps(newProps) {
-         if (newProps.submittedData === '') {
-             return;
-         }
-         // console.log("inside the table:" + newProps.submittedData.barcode);
-         products.push({
-             id: products.length,
-             barcode: newProps.submittedData.barcode,
-             sampleType: newProps.submittedData.sampleType,
-             volume: newProps.submittedData.volume,
-             uom: newProps.submittedData.uom,
-             sponser: newProps.submittedData.sponser,
-             study: newProps.submittedData.study
-         });
-     } */
+    constructor(props) {
+        super(props);
+        this.state = {
+            products : [{
+                id : 0,
+                workOrderId: 'Item Name 1',
+                createDate: '02/02/2011',
+                status: 'Created',
+                sponsor: 'kk',
+                parentSamples : 'abc',
+                createdBy : 'Amer',
+                aliquot : 'xyz' },
+                {
+                    id : 1,
+                    workOrderId: 'Item Name 1',
+                    createDate: '02/02/2011',
+                    status: 'Created',
+                    sponsor: 'kk',
+                    parentSamples : 'abc',
+                    createdBy : 'Amer',
+                    aliquot : 'xyz' },
+                {
+                    id : 2,
+                    workOrderId: 'Item Name 2',
+                    createDate: '03/12/2018',
+                    status: 'In Progress',
+                    sponsor: 'kk',
+                    parentSamples : 'abc',
+                    createdBy : 'Amer',
+                    aliquot : 'xyz' },
+                {
+                    id : 3,
+                    workOrderId: 'Item Name 3',
+                    createDate: '04/02/2011',
+                    status: 'Completed',
+                    sponsor: 'kk',
+                    parentSamples : 'abc',
+                    createdBy : 'Amer',
+                    aliquot : 'xyz' },
+                {
+                    id : 4,
+                    workOrderId: 'Item Name 4',
+                    createDate: '02/02/2011',
+                    status: 'Cancelled',
+                    sponsor: 'kk',
+                    parentSamples : 'abc',
+                    createdBy : 'Amer',
+                    aliquot : 'xyz'
+                }]
+    }
+    }
+
+    onRowSelect = (row, isSelected, e) => {
+        if(isSelected) {
+            selectedRows.push(row);
+        } else {
+            selectedRows.splice(selectedRows.indexOf(row),1);
+        }
+        if(selectedRows.length > 0) {
+           for(let i=0;i<selectedRows.length;i++) {
+               if((selectedRows[i].status === 'Created') || (selectedRows[i].status === 'In Progress')) {
+                   isStatusFlag[0] = isStatusFlag[1]= true;
+                   isStatusFlag[2] = isStatusFlag[3] = isStatusFlag[4] = false;
+               } else {
+                   isStatusFlag[1] = isStatusFlag[2]= isStatusFlag[3] = isStatusFlag[4]= true;
+                   isStatusFlag[0] = false;
+               }
+           }
+        } else {
+            isStatusFlag[0] = isStatusFlag[1] = isStatusFlag[2]= isStatusFlag[3] = isStatusFlag[4]= false;
+        }
+        this.props.handleExportSelectedRows(selectedRows);
+        this.props.handleStatusChange(isStatusFlag);
+    };
+
+     onSelectAll = (isSelected, selectedRows) => {
+            if (isSelected) {
+                for(let i=0;i<selectedRows.length;i++) {
+                    if((selectedRows[i].status === 'Created') || (selectedRows[i].status === 'In Progress')) {
+                        isStatusFlag[0] = isStatusFlag[1]= true;
+                        isStatusFlag[2] = isStatusFlag[3] = isStatusFlag[4] = false;
+                    } else  if((selectedRows[i].status === 'Completed') || ((selectedRows[i].status === 'Cancelled'))) {
+                        isStatusFlag[1] = isStatusFlag[2]= isStatusFlag[3] = isStatusFlag[4]= true;
+                        isStatusFlag[0] = false;
+                    }
+                }
+                this.props.handleExportSelectedRows(selectedRows);
+            } else {
+                isStatusFlag[0] = isStatusFlag[1] = isStatusFlag[2]= isStatusFlag[3] = isStatusFlag[4]= false;
+                this.props.handleExportSelectedRows([]);
+            }
+            this.props.handleStatusChange(isStatusFlag);
+     };
 
     render() {
         const options = {
@@ -50,7 +113,7 @@ class SearchPagination extends React.Component {
                     value: 10
                 }, {
                     text: 'All',
-                    value: products.length
+                    value: this.state.products.length
                 }
             ], // you can change the dropdown list for size per page
             sizePerPage: 5, // which size per page you want to locate as default
@@ -61,36 +124,33 @@ class SearchPagination extends React.Component {
             firstPage: 'First', // First page button text
             lastPage: 'Last', // Last page button text
             paginationShowsTotal: this.renderShowsTotal, // Accept bool or function
-            paginationPosition: 'bottom',
-
-            // deleteBtn: this.createCustomDeleteButton default is bottom, top and both is
-            // all available hideSizePerPage: true // You can hide the dropdown for
-            // sizePerPage alwaysShowAllBtns: true // Always show next and previous button
-            // withFirstAndLast: false > Hide the going to First and Last page button
+            paginationPosition: 'bottom'
         };
 
         const selectRowProp = {
             mode: 'checkbox',
-            bgColor: 'rgba(244, 65, 54, 0.36)'
+            bgColor: 'rgba(244, 65, 54, 0.36)',
+            onSelect: this.onRowSelect,
+            onSelectAll: this.onSelectAll
         };
 
         return (
             <div style={styles.pagebutton}>
                 <BootstrapTable
-                    data={products}
+                    data={this.state.products}
                     options={options}
                     pagination
                     selectRow={selectRowProp}
                     trStyle={styles.tdStyle}
                     headerStyle={styles.thStyle}>
                     <TableHeaderColumn width="39" dataField='id' isKey={true}>#</TableHeaderColumn>
-                    <TableHeaderColumn dataField='workOrderId'>Work Order Id</TableHeaderColumn>
-                    <TableHeaderColumn dataField='createDate'>Create Date</TableHeaderColumn>
-                    <TableHeaderColumn dataField='status'>Status</TableHeaderColumn>
-                    <TableHeaderColumn dataField='sponsor'>Sponsor</TableHeaderColumn>
-                    <TableHeaderColumn dataField='parentSamples' tdStyle={ { whiteSpace: 'normal' } }>Total # of Parent Sameples</TableHeaderColumn>
-                    <TableHeaderColumn dataField='createdBy'>Created By</TableHeaderColumn>
-                    <TableHeaderColumn dataField='aliquot'>Total # of Aliquot</TableHeaderColumn>
+                    <TableHeaderColumn ref='workOrderIdCol'dataField='workOrderId' dataSort={true} filter={ { type: 'TextFilter', placeholder:"Enter" } }>Work Order Id</TableHeaderColumn>
+                    <TableHeaderColumn dataField='createDate' dataSort={true} filter={ { type: 'TextFilter', placeholder:"Enter" } }>Create Date</TableHeaderColumn>
+                    <TableHeaderColumn dataField='status' filter={ { type: 'TextFilter', placeholder:"Enter" } }>Status</TableHeaderColumn>
+                    <TableHeaderColumn dataField='sponsor' filter={ { type: 'TextFilter', placeholder:"Enter" } }>Sponsor</TableHeaderColumn>
+                    <TableHeaderColumn dataField='parentSamples' tdStyle={ { whiteSpace: 'normal' } } filter={ { type: 'TextFilter', placeholder:"Enter" } }>Total # of Parent Sameples</TableHeaderColumn>
+                    <TableHeaderColumn dataField='createdBy' filter={ { type: 'TextFilter', placeholder:"Enter" } }>Created By</TableHeaderColumn>
+                    <TableHeaderColumn dataField='aliquot' filter={ { type: 'TextFilter', placeholder:"Enter" } }>Total # of Aliquot</TableHeaderColumn>
                 </BootstrapTable>
             </div>
 

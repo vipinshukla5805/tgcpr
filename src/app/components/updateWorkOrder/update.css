@@ -20,6 +20,10 @@
     display: flex;
 }
 
+.updateTableHeader {
+    margin-bottom: 35px;
+}
+
 /* .divider {
     width: 40%;
     align: left;
