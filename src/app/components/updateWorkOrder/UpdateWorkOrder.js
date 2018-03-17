@@ -90,11 +90,11 @@ class UpdateWorkOrder extends Component {
                         <div className="row">
                             <div className="col-sm-2">
                                 <label className="label">Work Order Id</label>
-                                <input type="text" className="form-control form-control-sm"></input>
+                                <input type="text" className="form-control form-control-sm" defaultValue={this.props.match.params.workOrderId}></input>
                             </div>
                             <div className="col-sm-2">
                                 <label className="label">Status</label>
-                                <input type="text" className="form-control form-control-sm"></input>
+                                <input type="text" className="form-control form-control-sm" defaultValue={this.props.match.params.status}></input>
                             </div>
                             <div className="col-sm-1">
                                 <label className="label">Total</label>

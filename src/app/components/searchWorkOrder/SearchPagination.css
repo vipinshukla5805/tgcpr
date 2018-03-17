@@ -2,5 +2,13 @@
     padding: 0px !important;
     margin-top:6px;
 }
+.date-filter-comparator{
+    display: none !important;
+}
 
 
+.date-filter-input {
+    width: 175px !important;
+    height: 27px !important;
+    margin-top: 8px !important;
+}

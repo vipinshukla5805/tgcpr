@@ -18,9 +18,6 @@ class HomePage extends Component {
             <Link className="btn btn-block list-group-item" to="/searchWorkOrder">
               Search Work Order
             </Link>
-            <Link className="btn btn-block list-group-item" to="/updateWorkOrder">
-              Update Work Order
-            </Link>
             <Link className="btn btn-block list-group-item" to="/createWorkOrder">
               Process Batch
             </Link>

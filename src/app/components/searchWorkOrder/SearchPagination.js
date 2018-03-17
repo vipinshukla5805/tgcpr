@@ -3,63 +3,28 @@ import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import './SearchPagination.css';
 
 let isStatusFlag = [false, false, false, false, false];
+let allStatusFlags = [false , false];
 let selectedRows = [];
-
 class SearchPagination extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            products : [{
-                id : 0,
-                workOrderId: 'Item Name 1',
-                createDate: '02/02/2011',
-                status: 'Created',
-                sponsor: 'kk',
-                parentSamples : 'abc',
-                createdBy : 'Amer',
-                aliquot : 'xyz' },
-                {
-                    id : 1,
-                    workOrderId: 'Item Name 1',
-                    createDate: '02/02/2011',
-                    status: 'Created',
-                    sponsor: 'kk',
-                    parentSamples : 'abc',
-                    createdBy : 'Amer',
-                    aliquot : 'xyz' },
-                {
-                    id : 2,
-                    workOrderId: 'Item Name 2',
-                    createDate: '03/12/2018',
-                    status: 'In Progress',
-                    sponsor: 'kk',
-                    parentSamples : 'abc',
-                    createdBy : 'Amer',
-                    aliquot : 'xyz' },
-                {
-                    id : 3,
-                    workOrderId: 'Item Name 3',
-                    createDate: '04/02/2011',
-                    status: 'Completed',
-                    sponsor: 'kk',
-                    parentSamples : 'abc',
-                    createdBy : 'Amer',
-                    aliquot : 'xyz' },
-                {
-                    id : 4,
-                    workOrderId: 'Item Name 4',
-                    createDate: '02/02/2011',
-                    status: 'Cancelled',
-                    sponsor: 'kk',
-                    parentSamples : 'abc',
-                    createdBy : 'Amer',
-                    aliquot : 'xyz'
-                }]
+            products : props.products1,
+            productData : []
+        };
+        this.dateFormatter = this.dateFormatter.bind(this);
     }
-    }
+     dateFormatter = (cell, row) => {
+            if (typeof cell !== 'object') {
+                cell = new Date(cell);
+            }
+
+         return `${('0' + (cell.getMonth() + 1)).slice(-2)}/${('0' + cell.getDate()).slice(-2)}/${cell.getFullYear()}`;
+     };
 
     onRowSelect = (row, isSelected, e) => {
+        let statusArray = [];
         if(isSelected) {
             selectedRows.push(row);
         } else {
@@ -67,6 +32,7 @@ class SearchPagination extends React.Component {
         }
         if(selectedRows.length > 0) {
            for(let i=0;i<selectedRows.length;i++) {
+               statusArray.push(selectedRows[i].status);
                if((selectedRows[i].status === 'Created') || (selectedRows[i].status === 'In Progress')) {
                    isStatusFlag[0] = isStatusFlag[1]= true;
                    isStatusFlag[2] = isStatusFlag[3] = isStatusFlag[4] = false;
@@ -75,6 +41,13 @@ class SearchPagination extends React.Component {
                    isStatusFlag[0] = false;
                }
            }
+            if(((statusArray.includes('Created')) && (statusArray.includes('Cancelled'))) ||
+                ((statusArray.includes('In Progress')) && (statusArray.includes('Cancelled'))) ||
+                ((statusArray.includes('Created')) && (statusArray.includes('Completed'))) ||
+                ((statusArray.includes('In Progress')) && (statusArray.includes('Completed')))) {
+                isStatusFlag[0] = isStatusFlag[1] = isStatusFlag[2]= isStatusFlag[3] = isStatusFlag[4]= false;
+            }
+
         } else {
             isStatusFlag[0] = isStatusFlag[1] = isStatusFlag[2]= isStatusFlag[3] = isStatusFlag[4]= false;
         }
@@ -82,17 +55,36 @@ class SearchPagination extends React.Component {
         this.props.handleStatusChange(isStatusFlag);
     };
 
+
      onSelectAll = (isSelected, selectedRows) => {
+         let checkStatus = [true,true]
+         let statusArray = [];
             if (isSelected) {
                 for(let i=0;i<selectedRows.length;i++) {
-                    if((selectedRows[i].status === 'Created') || (selectedRows[i].status === 'In Progress')) {
-                        isStatusFlag[0] = isStatusFlag[1]= true;
-                        isStatusFlag[2] = isStatusFlag[3] = isStatusFlag[4] = false;
-                    } else  if((selectedRows[i].status === 'Completed') || ((selectedRows[i].status === 'Cancelled'))) {
-                        isStatusFlag[1] = isStatusFlag[2]= isStatusFlag[3] = isStatusFlag[4]= true;
-                        isStatusFlag[0] = false;
+                    statusArray.push(selectedRows[i].status);
+                }
+                for (let i=0;i<statusArray.length;i++) {
+                    allStatusFlags[0] = ((checkStatus[0] && statusArray[i] === 'Created') || (checkStatus[0] && statusArray[i] === 'In Progress'));
+                    if(allStatusFlags[0] === false) {
+                        checkStatus[0] = false;
                     }
                 }
+                for (let i=0;i<statusArray.length;i++) {
+                    allStatusFlags[1] = ((checkStatus[1] && statusArray[i] === 'Completed') || (checkStatus[1] && statusArray[i] === 'Cancelled'));
+                    if(allStatusFlags[1] === false) {
+                        checkStatus[1] = false;
+                    }
+                }
+                if(allStatusFlags[0] === true) {
+                    isStatusFlag[0] = isStatusFlag[1]= true;
+                    isStatusFlag[2] = isStatusFlag[3] = isStatusFlag[4] = false;
+                } else if(allStatusFlags[1] === true) {
+                    isStatusFlag[1] = isStatusFlag[2]= isStatusFlag[3] = isStatusFlag[4]= true;
+                    isStatusFlag[0] = false;
+                } else {
+                    isStatusFlag[0] = isStatusFlag[1] = isStatusFlag[2]= isStatusFlag[3] = isStatusFlag[4]= false;
+                }
+                allStatusFlags = [false, false];
                 this.props.handleExportSelectedRows(selectedRows);
             } else {
                 isStatusFlag[0] = isStatusFlag[1] = isStatusFlag[2]= isStatusFlag[3] = isStatusFlag[4]= false;
@@ -143,14 +135,14 @@ class SearchPagination extends React.Component {
                     selectRow={selectRowProp}
                     trStyle={styles.tdStyle}
                     headerStyle={styles.thStyle}>
-                    <TableHeaderColumn width="39" dataField='id' isKey={true}>#</TableHeaderColumn>
-                    <TableHeaderColumn ref='workOrderIdCol'dataField='workOrderId' dataSort={true} filter={ { type: 'TextFilter', placeholder:"Enter" } }>Work Order Id</TableHeaderColumn>
-                    <TableHeaderColumn dataField='createDate' dataSort={true} filter={ { type: 'TextFilter', placeholder:"Enter" } }>Create Date</TableHeaderColumn>
-                    <TableHeaderColumn dataField='status' filter={ { type: 'TextFilter', placeholder:"Enter" } }>Status</TableHeaderColumn>
-                    <TableHeaderColumn dataField='sponsor' filter={ { type: 'TextFilter', placeholder:"Enter" } }>Sponsor</TableHeaderColumn>
-                    <TableHeaderColumn dataField='parentSamples' tdStyle={ { whiteSpace: 'normal' } } filter={ { type: 'TextFilter', placeholder:"Enter" } }>Total # of Parent Sameples</TableHeaderColumn>
+                    <TableHeaderColumn width="39" dataField='id' isKey={true} hidden={true}>#</TableHeaderColumn>
+                    <TableHeaderColumn ref='workOrderIdCol'dataField='workOrderId' dataSort={true} width="13%"filter={ { type: 'TextFilter', placeholder:"Enter" } }>Work Order Id</TableHeaderColumn>
+                    <TableHeaderColumn dataField='createDate' dataSort={true} width="18%" dataFormat={ this.dateFormatter } filter={ { type: 'DateFilter' , defaultValue: { comparator: '=' } , placeholder:"dd/mm/yyyy"} }>Create Date</TableHeaderColumn>
+                    <TableHeaderColumn dataField='status' width="10%" filter={ { type: 'TextFilter', placeholder:"Enter" } }>Status</TableHeaderColumn>
+                    <TableHeaderColumn dataField='sponsor' width="10%" filter={ { type: 'TextFilter', placeholder:"Enter" } }>Sponsor</TableHeaderColumn>
+                    <TableHeaderColumn dataField='parentSamples' tdStyle={ { whiteSpace: 'normal' } } width="20%"filter={ { type: 'TextFilter', placeholder:"Enter" } }>Total # of Parent Samples</TableHeaderColumn>
                     <TableHeaderColumn dataField='createdBy' filter={ { type: 'TextFilter', placeholder:"Enter" } }>Created By</TableHeaderColumn>
-                    <TableHeaderColumn dataField='aliquot' filter={ { type: 'TextFilter', placeholder:"Enter" } }>Total # of Aliquot</TableHeaderColumn>
+                    <TableHeaderColumn dataField='aliquot' width="14%" filter={ { type: 'TextFilter', placeholder:"Enter" } }>Total # of Aliquot</TableHeaderColumn>
                 </BootstrapTable>
             </div>
 

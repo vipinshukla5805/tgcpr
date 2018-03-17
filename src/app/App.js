@@ -13,7 +13,7 @@ class App extends Component {
           <Route exact path="/" component={HomePage} />
           <Route path="/createWorkOrder" component={CreateWorkOrder} />
           <Route path="/searchWorkOrder" component={SearchWorkOrder} />
-          <Route path="/updateWorkOrder" component={UpdateWorkOrder} />
+          <Route path="/updateWorkOrder/:workOrderId/:status" component={UpdateWorkOrder} />
         </Switch>
       </div>
     );

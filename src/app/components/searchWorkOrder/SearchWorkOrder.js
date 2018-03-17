@@ -12,16 +12,63 @@ const liveStudySearchData = ["Mustard", "Ketchup", "Relish"];
 const liveWorkOrderIdSearchData = ["Mustard", "Ketchup", "Relish"];
 const liveSavedSearchData = ["Save1", "Save2", "Save3", "Save4"];
 const liveStatusSearchData = ["Created", "In Progress", "Completed", "Cancelled"];
+
+const products1 = [{
+    id : 0,
+    workOrderId: 'Item Name 1',
+    createDate: 'Sat Mar 20 2017 11:48:05 GMT+0530 (IST)',
+    status: 'Created',
+    sponsor: 'kk',
+    parentSamples : 'abc',
+    createdBy : 'Amer',
+    aliquot : 'xyz' },
+    {
+        id : 1,
+        workOrderId: 'Item Name 1',
+        createDate: 'Sat Mar 17 2018 11:48:05 GMT+0530 (IST)',
+        status: 'Created',
+        sponsor: 'kk',
+        parentSamples : 'abc',
+        createdBy : 'Amer',
+        aliquot : 'xyz' },
+    {
+        id : 2,
+        workOrderId: 'Item Name 2',
+        createDate: 'Sat Mar 17 2018 11:48:05 GMT+0530 (IST)',
+        status: 'In Progress',
+        sponsor: 'kk',
+        parentSamples : 'abc',
+        createdBy : 'Amer',
+        aliquot : 'xyz' },
+    {
+        id : 3,
+        workOrderId: 'Item Name 3',
+        createDate: 'Sat Oct 01 2014 11:48:05 GMT+0530 (IST)',
+        status: 'Completed',
+        sponsor: 'kk',
+        parentSamples : 'abc',
+        createdBy : 'Amer',
+        aliquot : 'xyz' },
+    {
+        id : 4,
+        workOrderId: 'Item Name 4',
+        createDate: 'Sat Dec 10 2010 11:48:05 GMT+0530 (IST)',
+        status: 'Cancelled',
+        sponsor: 'kk',
+        parentSamples : 'abc',
+        createdBy : 'Amer',
+        aliquot : 'xyz'
+    }];
 class SearchWorkOrder extends Component {
     constructor(props) {
         super(props);
         this.state = {
             statusFlag : [false, false,false, false, false],
-            selectedExportRows : []
-        }
+            selectedExportRows : [],
+        };
         this.handleExportSelectedRows = this.handleExportSelectedRows.bind(this);
         this.handleStatusChange = this.handleStatusChange.bind(this);
-        this.handleStatusCompletedFlag = this.handleStatusCompletedFlag(this);
+        this.handleStatusCompletedFlag = this.handleStatusCompletedFlag.bind(this);
 }
 
     handleStatusChange = (isStatusFlag) => {
@@ -31,7 +78,6 @@ class SearchWorkOrder extends Component {
     };
 
     handleExportSelectedRows = (selectedRows) => {
-        console.log(selectedRows);
         this.setState ({
             selectedExportRows:selectedRows
         })
@@ -70,13 +116,13 @@ class SearchWorkOrder extends Component {
                 </div>
                 {/* <hr class="divider" text="react-native"/> */}
                 <div className="container">
-                    <SearchPagination handleStatusChange={this.handleStatusChange} handleExportSelectedRows={this.handleExportSelectedRows} handleStatusCompletedFlag = {this.handleStatusCompletedFlag}/>
+                    <SearchPagination products1={products1} handleStatusChange={this.handleStatusChange} handleExportSelectedRows={this.handleExportSelectedRows} handleStatusCompletedFlag = {this.handleStatusCompletedFlag}/>
                 </div>
 
                 <div className="container" style={styles.fStyle}>
                     <div className="row justify-content-md-center">
                         <div className="col-sm-2">
-                            <Link to="/updateWorkOrder">
+                            <Link to={'/updateWorkOrder/abc/created'} >
                                 <button className="btn btn-primary" disabled={!this.state.statusFlag[0]}>
                                 Update
                                 </button>
@@ -89,7 +135,7 @@ class SearchWorkOrder extends Component {
                                     <Workbook.Column label="Create Date"  value="createDate"/>
                                     <Workbook.Column label="Status"  value="status"/>
                                     <Workbook.Column label="Sponsor"  value="sponsor"/>
-                                    <Workbook.Column label="Total # of Parent Sameples"  value="parentSamples"/>
+                                    <Workbook.Column label="Total # of Parent Samples" value="parentSamples"/>
                                     <Workbook.Column label="Created By"  value="createdBy"/>
                                     <Workbook.Column label="Total # of Aliquot"  value="aliquot"/>
                                 </Workbook.Sheet>
