@@ -78,7 +78,7 @@ class UpdateWorkOrder extends Component {
             this.setState({ status: 'Cancelled'});
             Alert.info('Status Changed to Cancelled', {
                 position: 'top-right',
-                effect: 'slide',
+                effect: 'scale',
                 offset : 80,
                 timeout: 2000
             });
