@@ -45,7 +45,7 @@ class PaginationTable extends React.Component {
 
        this.setState({
            submittedData : newAddedData
-       })
+       });
        this.props.editSubmittedData(this.state.submittedData);
 
         }

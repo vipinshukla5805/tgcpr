@@ -2,8 +2,6 @@ import React from 'react';
 import { formStyles  } from "../Constants";
 import axios from 'axios';
 
-const checkBarcode = [{ barcode:'kkkk', sampleType:'3', sponsor:'12', uom : '1', studyCode : '45', volumeUnit : '5' }]
-
 export default class WorkOrderForm extends React.Component {
     constructor(props) {
         super(props);
@@ -29,7 +27,17 @@ export default class WorkOrderForm extends React.Component {
 
     }
 
-    onFormSubmit(event) {
+    saveWorkOrder = (barcode) => {
+        console.log('here');
+        axios({
+            method: 'post', url: 'http://localhost:8081/gclportal/api/workorder/saveWorkOrder', data :  {barCodes : ['A72260415J0'] }
+        }).then((res)=> {
+            console.log(res.data);
+        }, (error)=>{
+            console.log(error);
+        })
+    };
+    onFormSubmit(event){
         event.preventDefault();
         let items = [...this.state.items];
         var isBarcodePresent = true;
@@ -50,7 +58,7 @@ export default class WorkOrderForm extends React.Component {
                 study: this.state.study
             });
         }
-
+        this.saveWorkOrder(this.state.barcode);
         this.setState({
             items,
             barcode: '',
@@ -65,9 +73,17 @@ export default class WorkOrderForm extends React.Component {
     }
 
     findBarcodeData = (barcode) => {
-        axios.get('https://api.github.com/users/ap0404')
-             .then( (res) => { console.log(res.data);},
-                 (error) => {console.log(error)});
+        axios.get('http://localhost:8081/gclportal/api/workorder/barcodedata?barcode=' + barcode)
+            .then( (res) => {
+                    this.setState({
+                        sampleType: res.data.sampleType,
+                        volume: res.data.sampleVolume,
+                        uom: res.data.uom,
+                        sponsor: res.data.sponsor,
+                        study: res.data.studyCode
+                    })
+                },
+                (error) => {console.log(error)});
     };
 
     handleChange(event) {
