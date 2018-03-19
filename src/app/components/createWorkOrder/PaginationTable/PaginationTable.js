@@ -22,7 +22,7 @@ class PaginationTable extends React.Component {
         this.onAfterDeleteRow = this.onAfterDeleteRow.bind(this);
         this.handleData = this.handleData.bind(this);
     }
-     
+
     handleData(data) {
         validationResult = ImportDataValidation(data, this.state.submittedData);
 
@@ -39,7 +39,7 @@ class PaginationTable extends React.Component {
                     sampleType:(this.state.DataFromXlsx[i][2]=== '' || this.state.DataFromXlsx[i][2]=== undefined) ? 'N/A' :  this.state.DataFromXlsx[i][2] ,
                     uom : (this.state.DataFromXlsx[i][3]=== '' || this.state.DataFromXlsx[i][3]=== undefined) ? 'N/A' : this.state.DataFromXlsx[i][3] ,
                     sponsor : (this.state.DataFromXlsx[i][4]=== '' || this.state.DataFromXlsx[i][4]=== undefined) ? 'N/A' : this.state.DataFromXlsx[i][4] ,
-                    study: (this.state.DataFromXlsx[i][5]=== '' || this.state.DataFromXlsx[i][5]=== undefined) ? 'N/A' : this.state.DataFromXlsx[i][5] 
+                    study: (this.state.DataFromXlsx[i][5]=== '' || this.state.DataFromXlsx[i][5]=== undefined) ? 'N/A' : this.state.DataFromXlsx[i][5]
                 })
          }
 
@@ -53,13 +53,13 @@ class PaginationTable extends React.Component {
         else {
             alert(validationResult.reason);
         }
-   
+
     }
     componentWillReceiveProps(newProps) {
         if(newProps.submittedData!==this.state.submittedData){
             this.setState({ submittedData : newProps.submittedData});
         }
-         
+
     }
 
     onAfterDeleteRow = (rowKeys) => {
@@ -125,9 +125,9 @@ class PaginationTable extends React.Component {
 
                         <SheetJSApp dataHandler={this.handleData} />
 
-                        <ExportToExcel exportedData={this.state.submittedData} />        
-                        
-                      
+                        <ExportToExcel exportedData={this.state.submittedData} />
+
+
                         <div className="col-sm-2">
                             <div className="form-group">
                                 <button className="btn btn-success">Completed</button>

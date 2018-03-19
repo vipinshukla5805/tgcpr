@@ -12,6 +12,7 @@ const liveStudySearchData = ["Mustard", "Ketchup", "Relish"];
 const liveWorkOrderIdSearchData = ["Mustard", "Ketchup", "Relish"];
 const liveSavedSearchData = ["Save1", "Save2", "Save3", "Save4"];
 const liveStatusSearchData = ["Created", "In Progress", "Completed", "Cancelled"];
+let selectedRow = [{workOrderId:'', status : ''}];
 
 const products1 = [{
     id : 0,
@@ -35,7 +36,7 @@ const products1 = [{
         id : 2,
         workOrderId: 'Item Name 2',
         createDate: 'Sat Mar 17 2018 11:48:05 GMT+0530 (IST)',
-        status: 'In Progress',
+        status: 'Created',
         sponsor: 'kk',
         parentSamples : 'abc',
         createdBy : 'Amer',
@@ -44,7 +45,7 @@ const products1 = [{
         id : 3,
         workOrderId: 'Item Name 3',
         createDate: 'Sat Oct 01 2014 11:48:05 GMT+0530 (IST)',
-        status: 'Completed',
+        status: 'Created',
         sponsor: 'kk',
         parentSamples : 'abc',
         createdBy : 'Amer',
@@ -59,6 +60,7 @@ const products1 = [{
         createdBy : 'Amer',
         aliquot : 'xyz'
     }];
+
 class SearchWorkOrder extends Component {
     constructor(props) {
         super(props);
@@ -78,6 +80,8 @@ class SearchWorkOrder extends Component {
     };
 
     handleExportSelectedRows = (selectedRows) => {
+        selectedRow = selectedRows;
+        console.log(selectedRows);
         this.setState ({
             selectedExportRows:selectedRows
         })
@@ -122,7 +126,7 @@ class SearchWorkOrder extends Component {
                 <div className="container" style={styles.fStyle}>
                     <div className="row justify-content-md-center">
                         <div className="col-sm-2">
-                            <Link to={'/updateWorkOrder/abc/created'} >
+                            <Link to={'/updateWorkOrder/' + selectedRow[0].workOrderId + '/' + selectedRow[0].status} >
                                 <button className="btn btn-primary" disabled={!this.state.statusFlag[0]}>
                                 Update
                                 </button>
@@ -130,6 +134,7 @@ class SearchWorkOrder extends Component {
                         </div>
                         <div className="col-sm-2">
                             <Workbook filename="Search-Work-Order.xlsx" element={<button className="btn btn-primary" disabled={!this.state.statusFlag[1]}>Export</button>}>
+
                                 <Workbook.Sheet data={this.state.selectedExportRows} name="Sheet A">
                                     <Workbook.Column label="Work Order Id" value="workOrderId"  />
                                     <Workbook.Column label="Create Date"  value="createDate"/>

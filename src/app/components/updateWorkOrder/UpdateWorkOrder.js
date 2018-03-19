@@ -103,13 +103,15 @@ class UpdateWorkOrder extends Component {
 
                         </div>
                     </form>
+                </div>
 
-
+                <div className="container" style={styles.pagebutton}>
                     <BootstrapTable
                         data={this.state.products}
                         options={options}
                         pagination
                         selectRow={selectRowProp}
+                        deleteRow={true}
                         trStyle={styles.tdStyle}
                         headerStyle={styles.thStyle}
                     >
@@ -146,6 +148,22 @@ const styles = ({
     //Bottom Container style
     fStyle: {
         marginTop: '35px'
+    },
+    pagebutton: {
+        textAlign: 'left',
+        marginTop: '25px'
+    },
+
+    // table data style
+    tdStyle: {
+        lineHeight: '14px',
+        deleteRow: 'bottom'
+    },
+
+    // table header style
+    thStyle: {
+        textAlign: 'center',
+        backgroundColor: '#a06aa0c4'
     }
 });
 
