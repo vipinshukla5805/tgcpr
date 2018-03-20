@@ -2,10 +2,10 @@ import React, {Component} from 'react';
 import {Typeahead} from 'react-bootstrap-typeahead';
 
 export default class LiveSearch extends Component {
-
-
     onChange = name => value =>{
-         console.log(name,value);
+         if(name==='Study') { name='studyCode';}
+         if(name==='Location') {name='location';}
+         this.props.notifyParent(name,value);
     };
 
     render(props) {

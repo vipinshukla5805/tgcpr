@@ -17,6 +17,10 @@ class SearchPagination extends React.Component {
     }
 
      dateFormatter = (cell, row) => {
+        console.log(cell);
+            if (cell === undefined){
+                cell = new Date(row.createdDate);
+            }
             if (typeof cell !== 'object') {
                 cell = new Date(cell);
             }
@@ -129,7 +133,7 @@ class SearchPagination extends React.Component {
         return (
             <div style={styles.pagebutton}>
                 <BootstrapTable
-                    data={this.state.products}
+                    data={this.props.products1}
                     options={options}
                     pagination
                     selectRow={selectRowProp}
