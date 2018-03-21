@@ -8,8 +8,8 @@ import Workbook from 'react-excel-workbook';
 import axios from "axios/index";
 
 
-const liveLocationSearchData = ['Mustard', 'Ketchup', 'Relish', 'BioCryst Pharmaceuticals, Inc.'];
-const liveStudySearchData = ["Mustard", "Ketchup", "Relish", 'MERK0163'];
+const liveLocationSearchData = ['Millipore - Abingdon', 'RGI-LOS ANGLES', 'KENTUCKY', 'BioCryst Pharmaceuticals, Inc.'];
+const liveStudySearchData = ["RTUJ34", "POYUT8", "BOAT11", 'MERK0163'];
 const liveWorkOrderIdSearchData = ["Mustard", "Ketchup", "Relish"];
 const liveSavedSearchData = ["Save1", "Save2", "Save3", "Save4"];
 const liveStatusSearchData = ["Created", "In Progress", "Completed", "Cancelled"];
@@ -25,31 +25,31 @@ class SearchWorkOrder extends Component {
             products1 : [
                 {
                     id : 1,
-                    workOrderId: 'Item Name 1',
+                    workOrderId: '199208',
                     createDate: 'Sat Mar 17 2018 11:48:05 GMT+0530 (EST)',
                     status: 'Created',
-                    sponsor: 'kk',
-                    parentSamples : 'abc',
+                    sponsor: 'Nad',
+                    parentSamples : '5',
                     createdBy : 'Amer',
-                    aliquot : 'xyz' },
+                    aliquot : '36' },
                 {
                     id : 2,
-                    workOrderId: 'Item Name 2',
+                    workOrderId: '687356',
                     createDate: 'Sat Mar 17 2018 11:48:05 GMT+0530 (EST)',
                     status: 'In Progress',
-                    sponsor: 'kk',
-                    parentSamples : 'abc',
-                    createdBy : 'Amer',
-                    aliquot : 'xyz' },
+                    sponsor: 'Mark',
+                    parentSamples : '4',
+                    createdBy : 'sam',
+                    aliquot : '14' },
                 {
                     id : 3,
-                    workOrderId: 'Item Name 3',
+                    workOrderId: '100090',
                     createDate: 'Sat Oct 01 2014 11:48:05 GMT+0530 (EST)',
                     status: 'Completed',
-                    sponsor: 'kk',
-                    parentSamples : 'abc',
-                    createdBy : 'Amer',
-                    aliquot : 'xyz'}]
+                    sponsor: 'Forest Inst',
+                    parentSamples : '7',
+                    createdBy : 'jay',
+                    aliquot : '20'}]
         };
         this.handleExportSelectedRows = this.handleExportSelectedRows.bind(this);
         this.handleStatusChange = this.handleStatusChange.bind(this);

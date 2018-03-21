@@ -1,7 +1,6 @@
 import React from 'react';
 import Workbook from 'react-excel-workbook';
 
-
 class ExportToExcel extends React.Component{
 
 	render() {

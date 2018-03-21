@@ -21,9 +21,9 @@ label.required:after {content: " *"; color: red;}
 }
 
 /* table */
-.thead-light {
-background-color: grey;
-}
+/*.thead-light {*/
+/*background-color: grey;*/
+/*}*/
 
 /* import button to browse file */
 .btn-file {

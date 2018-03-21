@@ -6,12 +6,13 @@
 
 .react-bs-table-del-btn:hover {
 	background-color: red;
+	border: indianred;
 	color: white;
 }
 
 .btn-primary {
-	background-color: grey;
-	border:grey;
+	background-color: #0000ffb0;
+	border:#0000ffb0;
 }
 .react-bs-table table td, .react-bs-table table th {
 	overflow: visible;

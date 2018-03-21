@@ -73,7 +73,7 @@ export default class WorkOrderForm extends React.Component {
     }
 
     findBarcodeData = (barcode) => {
-        axios.get('http://localhost:8081/gclportal/api/workorder/barcodedata?barcode=' + barcode)
+        axios.get('http://xtest3.ppdi.com/gclportal/api/workorder/barcodedata?barcode=' + barcode)
             .then( (res) => {
                     this.setState({
                         sampleType: res.data.sampleType,

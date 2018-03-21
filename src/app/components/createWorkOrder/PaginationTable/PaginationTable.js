@@ -82,6 +82,8 @@ class PaginationTable extends React.Component {
                     }, {
                         text: '10', value: 10
                     }, {
+                        text: '40', value: 40
+                    },{
                         text: 'All', value: this.state.submittedData.length
                     }],
                     sizePerPage: 5,  
