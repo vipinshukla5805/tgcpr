@@ -66,9 +66,9 @@ class UpdateWorkOrder extends Component {
              this.setState({ status: 'Completed'});
              Alert.info('Status Changed to Completed', {
                  position: 'top-right',
-                 effect: 'slide',
-                 offset : 80,
-                 timeout: 200
+                 effect: 'scale',
+                 timeout: 2000,
+                 offset : 80
              });
          }
     };
@@ -78,7 +78,7 @@ class UpdateWorkOrder extends Component {
             this.setState({ status: 'Cancelled'});
             Alert.info('Status Changed to Cancelled', {
                 position: 'top-right',
-                effect: 'slide',
+                effect: 'scale',
                 offset : 80,
                 timeout: 2000
             });
