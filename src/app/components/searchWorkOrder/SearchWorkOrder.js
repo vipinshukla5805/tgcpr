@@ -7,12 +7,23 @@ import {Link} from "react-router-dom";
 import Workbook from 'react-excel-workbook';
 import axios from "axios/index";
 
-
+const liveLocationSearchData = ['xyz'];
 const liveWorkOrderIdSearchData = ["Mustard", "Ketchup", "Relish"];
 const liveSavedSearchData = ["Save1", "Save2", "Save3", "Save4"];
 const liveStatusSearchData = ["Created", "In Progress", "Completed", "Cancelled"];
 let selectedRow = [{workOrderId:'', status : ''}];
 let queryArray =[];
+
+function buildUrl(name, selectedField) {
+    let str = 'http://xtest3.ppdi.com/gclportal/api/workorder/getWorkOrderSearchResults?';
+    for(let i=0;i<queryArray.length;i++) {
+        str += queryArray[i].name + '='+ queryArray[i].status + '&';
+    }
+
+    str += name + '=' + selectedField;
+    queryArray.push({name : name, selectedField : selectedField});
+    return str;
+};
 
 class SearchWorkOrder extends Component {
     constructor(props) {
@@ -55,7 +66,6 @@ class SearchWorkOrder extends Component {
         this.handleExportSelectedRows = this.handleExportSelectedRows.bind(this);
         this.handleStatusChange = this.handleStatusChange.bind(this);
         this.handleStatusCompletedFlag = this.handleStatusCompletedFlag.bind(this);
-        this.buildUrl = this.buildUrl(this);
 }
 
     handleStatusChange = (isStatusFlag) => {
@@ -110,19 +120,9 @@ class SearchWorkOrder extends Component {
                   });
     };
 
-    buildUrl = (name, selectedField) => {
-        let str = 'http://xtest3.ppdi.com/gclportal/api/workorder/getWorkOrderSearchResults?';
-        for(let i=0;i<queryArray.length;i++) {
-            str += queryArray[i].name + '='+ queryArray[i].status + '&';
-        }
-
-        str += name + '=' + selectedField;
-        queryArray.push({name : name, selectedField : selectedField});
-        return str;
-    };
     notifyParent = (name,selectedField) => {
 
-            axios.get(this.buildUrl(name,selectedField))
+            axios.get(buildUrl(name,selectedField))
                 .then( (res) => {
                         console.log(res.data);
                         if(res.data.length > 0){
@@ -153,7 +153,7 @@ class SearchWorkOrder extends Component {
                     <form >
                         <div className="row">
 
-                                <LiveSearch liveSearchData={this.state.liveLocationSearchData} notifyParent={this.notifyParent} liveSearchDataTitle="Location"/>
+                                <LiveSearch liveSearchData={liveLocationSearchData} notifyParent={this.notifyParent} liveSearchDataTitle="Location"/>
 
                                 <LiveSearch liveSearchData={this.state.liveStudySearchData} notifyParent={this.notifyParent} liveSearchDataTitle="Study"/>
 
