@@ -8,8 +8,6 @@ import Workbook from 'react-excel-workbook';
 import axios from "axios/index";
 
 
-//const liveLocationSearchData = ['Millipore - Abingdon', 'RGI-LOS ANGLES', 'KENTUCKY', 'BioCryst Pharmaceuticals, Inc.'];
-//const liveStudySearchData = ["RTUJ34", "POYUT8", "BOAT11", 'MERK0163'];
 const liveWorkOrderIdSearchData = ["Mustard", "Ketchup", "Relish"];
 const liveSavedSearchData = ["Save1", "Save2", "Save3", "Save4"];
 const liveStatusSearchData = ["Created", "In Progress", "Completed", "Cancelled"];
@@ -57,6 +55,7 @@ class SearchWorkOrder extends Component {
         this.handleExportSelectedRows = this.handleExportSelectedRows.bind(this);
         this.handleStatusChange = this.handleStatusChange.bind(this);
         this.handleStatusCompletedFlag = this.handleStatusCompletedFlag.bind(this);
+        this.buildUrl = this.buildUrl(this);
 }
 
     handleStatusChange = (isStatusFlag) => {
@@ -110,9 +109,20 @@ class SearchWorkOrder extends Component {
            statusCompletedFlag: isStatusCompletedFlag
                   });
     };
+
+    buildUrl = (name, selectedField) => {
+        let str = 'http://xtest3.ppdi.com/gclportal/api/workorder/getWorkOrderSearchResults?';
+        for(let i=0;i<queryArray.length;i++) {
+            str += queryArray[i].name + '='+ queryArray[i].status + '&';
+        }
+
+        str += name + '=' + selectedField;
+        queryArray.push({name : name, selectedField : selectedField});
+        return str;
+    };
     notifyParent = (name,selectedField) => {
-        if(queryArray.length===0) {
-            axios.get('http://xtest3.ppdi.com/gclportal/api/workorder/getWorkOrderSearchResults?'+name+ '=' + selectedField)
+
+            axios.get(this.buildUrl(name,selectedField))
                 .then( (res) => {
                         console.log(res.data);
                         if(res.data.length > 0){
@@ -130,37 +140,9 @@ class SearchWorkOrder extends Component {
                             this.setState({
                                 products1 : productArray
                             });
-                            queryArray.push({name : name, selectedField : selectedField});
                         }
                     },
                     (error) => {console.log(error)});
-        }
-
-        if(queryArray.length===1) {
-            axios.get('http://xtest3.ppdi.com/gclportal/api/workorder/getWorkOrderSearchResults?'+queryArray[0].name+ '=' + queryArray[0].selectedField +'&'+ name+ '=' + selectedField)
-                .then( (res) => {
-                        console.log(res.data);
-                        if(res.data.length > 0) {
-                            var productArray = [];
-                            productArray.push({
-                                id: this.state.products1.length,
-                                workOrderId : res.data[0].barcodeNo,
-                                createdDate: new Date(res.data[0].createdDate).toString(),
-                                status: res.data[0].status,
-                                sponsor: res.data[0].sponsor,
-                                parentSamples: res.data[0].itemCount,
-                                createdBy : res.data[0].createdby
-                            });
-                            console.log(productArray );
-                            this.setState({
-                                products1 : productArray
-                            });
-                            queryArray.push({name : name, selectedField : selectedField});
-                        }
-
-                    },
-                    (error) => {console.log(error)});
-        }
 
     };
     render() {
