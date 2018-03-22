@@ -30,12 +30,31 @@ export default class WorkOrderForm extends React.Component {
     saveWorkOrder = (barcode) => {
         console.log('here');
         axios({
-            method: 'post', url: 'http://localhost:8081/gclportal/api/workorder/saveWorkOrder', data :  {barCodes : ['A72260415J0'] }
+            method: 'post', url: 'https://crossorigin.me/http://xtest3.ppdi.com/gclportal/api/workorder/saveWorkOrder', data :  {'barCodes' : ['A72260415J0'] }
         }).then((res)=> {
             console.log(res.data);
         }, (error)=>{
             console.log(error);
         })
+      /*  var data = JSON.stringify({
+            "barCodes": [
+                "A72260415J0"
+            ]
+        });
+
+        var xhr = new XMLHttpRequest();
+
+        xhr.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+                console.log(this.responseText);
+            }
+        });
+
+        xhr.open("POST", "https://crossorigin.me/http://xtest3.ppdi.com/gclportal/api/workorder/saveWorkOrder");
+        xhr.setRequestHeader("Content-Type", "application/json");
+
+
+        xhr.send(data); */
     };
     onFormSubmit(event){
         event.preventDefault();

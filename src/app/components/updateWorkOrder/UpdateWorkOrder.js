@@ -6,71 +6,28 @@ import ExportToExcel from "../createWorkOrder/ExportToExcel/ExportToExcel";
 import Alert from 'react-s-alert';
 import 'react-s-alert/dist/s-alert-default.css';
 import 'react-s-alert/dist/s-alert-css-effects/scale.css';
+import axios from 'axios';
 
 class UpdateWorkOrder extends Component {
-     constructor(props) {
-         super(props);
-         this.changeStatusToCompleted = this.changeStatusToCompleted.bind(this);
-         this.state = {
-             status : props.match.params.status,
-             workOrderId : props.match.params.workOrderId,
-             products: [{
-                 id: 0,
-                 barcode: 'Item Name 1',
-                 sampleType: 'xyz',
-                 volume: '10',
-                 sponsor: 'kk',
-                 uom: 'abc',
-                 study: 'Amer'
-             }, {
-                 id: 1,
-                 barcode: 'Item Name 2',
-                 sampleType: 'xyz',
-                 volume: '10',
-                 sponsor: 'kk',
-                 uom: 'abc',
-                 study: 'Amer'
-             },
-                 {
-                     id: 2,
-                     barcode: 'Item Name 3',
-                     sampleType: 'xyz',
-                     volume: '10',
-                     sponsor: 'kk',
-                     uom: 'abc',
-                     study: 'Amer'
-                 }, {
-                     id: 4,
-                     barcode: 'Item Name 3',
-                     sampleType: 'xyz',
-                     volume: '10',
-                     sponsor: 'kk',
-                     uom: 'abc',
-                     study: 'Amer'
-                 },
-                 {
-                     id: 5,
-                     barcode: 'Item Name 4',
-                     sampleType: 'xyz',
-                     volume: '10',
-                     sponsor: 'kk',
-                     uom: 'abc',
-                     study: 'Amer'
-                 }
-             ]
-         }
-     }
+    constructor(props) {
+        super(props);
+        this.changeStatusToCompleted = this.changeStatusToCompleted.bind(this);
+        this.state = {
+            status : props.match.params.status,
+            workOrderId : props.match.params.workOrderId,
+            products: []
+    }}
 
     changeStatusToCompleted = () => {
-         if(this.state.status === 'Created' || this.state.status === 'In Progress') {
-             this.setState({ status: 'Completed'});
-             Alert.info('Status Changed to Completed', {
-                 position: 'top-right',
-                 effect: 'scale',
-                 timeout: 2000,
-                 offset : 80
-             });
-         }
+        if(this.state.status === 'Created' || this.state.status === 'In Progress') {
+            this.setState({ status: 'Completed'});
+            Alert.info('Status Changed to Completed', {
+                position: 'top-right',
+                effect: 'scale',
+                timeout: 2000,
+                offset : 80
+            });
+        }
     };
 
     changeStatusToCancelled = () => {
@@ -90,7 +47,18 @@ class UpdateWorkOrder extends Component {
         });
     }
 
+    componentDidMount() {
+        axios.get('http://xtest3.ppdi.com/gclportal/api/workorder/bioaworkorder?bioaworkOrderNo=' + this.state.workOrderId)
+            .then( (res) => {
+                console.log(res.data);
+                    this.setState({
+                        products : res.data
+                    })
+                },
+                (error) => {console.log(error)});
+    }
     render() {
+        console.log(this.state.products);
         const options = {
             page: 1,
             sizePerPageList: [{
@@ -134,7 +102,7 @@ class UpdateWorkOrder extends Component {
                             </div>
                             <div className="col-sm-1">
                                 <label className="label">Total</label>
-                                <input type="text" className="form-control form-control-sm" defaultValue={this.state.products.length} disabled={true}></input>
+                                <input type="text" className="form-control form-control-sm" value={this.state.products.length} disabled={true}></input>
                             </div>
 
                         </div>
@@ -154,10 +122,10 @@ class UpdateWorkOrder extends Component {
                         <TableHeaderColumn width="39" dataField='id' isKey={ true }>#</TableHeaderColumn>
                         <TableHeaderColumn dataField='barcode'>Parent Barcode</TableHeaderColumn>
                         <TableHeaderColumn dataField='sampleType'>Sample Type</TableHeaderColumn>
-                        <TableHeaderColumn dataField='volume'>Volume</TableHeaderColumn>
+                        <TableHeaderColumn dataField='sampleVolume'>Volume</TableHeaderColumn>
                         <TableHeaderColumn dataField='uom'>UOM</TableHeaderColumn>
                         <TableHeaderColumn dataField='sponsor'>Sponsor</TableHeaderColumn>
-                        <TableHeaderColumn dataField='study'>Study</TableHeaderColumn>
+                        <TableHeaderColumn dataField='studyCode'>Study</TableHeaderColumn>
                     </BootstrapTable>
                 </div>
 

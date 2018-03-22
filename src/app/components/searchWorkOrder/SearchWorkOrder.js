@@ -8,8 +8,8 @@ import Workbook from 'react-excel-workbook';
 import axios from "axios/index";
 
 
-const liveLocationSearchData = ['Millipore - Abingdon', 'RGI-LOS ANGLES', 'KENTUCKY', 'BioCryst Pharmaceuticals, Inc.'];
-const liveStudySearchData = ["RTUJ34", "POYUT8", "BOAT11", 'MERK0163'];
+//const liveLocationSearchData = ['Millipore - Abingdon', 'RGI-LOS ANGLES', 'KENTUCKY', 'BioCryst Pharmaceuticals, Inc.'];
+//const liveStudySearchData = ["RTUJ34", "POYUT8", "BOAT11", 'MERK0163'];
 const liveWorkOrderIdSearchData = ["Mustard", "Ketchup", "Relish"];
 const liveSavedSearchData = ["Save1", "Save2", "Save3", "Save4"];
 const liveStatusSearchData = ["Created", "In Progress", "Completed", "Cancelled"];
@@ -21,6 +21,9 @@ class SearchWorkOrder extends Component {
         super(props);
         this.state = {
             statusFlag : [false, false,false, false, false],
+            liveLocationSearchData : [],
+            liveStudySearchData : [],
+            liveSponsorSearchData : [],
             selectedExportRows : [],
             products1 : [
                 {
@@ -62,6 +65,32 @@ class SearchWorkOrder extends Component {
       });
     };
 
+    componentDidMount() {
+        axios.get('http://xtest3.ppdi.com/gclportal/api/workorder/getLocations')
+            .then( (res) => {
+                    console.log(res.data);
+                    this.setState({
+                        liveLocationSearchData : res.data
+                    })
+                },
+                (error) => {console.log(error)});
+        axios.get('http://xtest3.ppdi.com/gclportal/api/workorder/getStudyCodes')
+            .then( (res) => {
+                    console.log(res.data);
+                    this.setState({
+                        liveStudySearchData : res.data
+                    })
+                },
+                (error) => {console.log(error)});
+        axios.get('http://xtest3.ppdi.com/gclportal/api/workorder/getSponsors')
+            .then( (res) => {
+                    console.log(res.data);
+                    this.setState({
+                        liveSponsorSearchData : res.data
+                    })
+                },
+                (error) => {console.log(error)});
+    }
     handleExportSelectedRows = (selectedRows) => {
         selectedRow = selectedRows;
         if(selectedRow === undefined || selectedRow[0] === undefined) {
@@ -83,47 +112,52 @@ class SearchWorkOrder extends Component {
     };
     notifyParent = (name,selectedField) => {
         if(queryArray.length===0) {
-            axios.get('http://localhost:8081/gclportal/api/workorder/getWorkOrderSearchResults?'+name+ '=' + selectedField)
+            axios.get('http://xtest3.ppdi.com/gclportal/api/workorder/getWorkOrderSearchResults?'+name+ '=' + selectedField)
                 .then( (res) => {
                         console.log(res.data);
-                        var productArray = [];
-                        productArray.push({
-                            id: this.state.products1.length,
-                            workOrderId : res.data[0].barcodeNo,
-                            createdDate: new Date(res.data[0].createdDate).toString(),
-                            status: res.data[0].status,
-                            sponsor: res.data[0].sponsor,
-                            parentSamples: res.data[0].itemCount,
-                            createdBy : res.data[0].createdby
-                        });
-                        console.log(productArray );
-                        this.setState({
-                            products1 : productArray
-                        });
-                        queryArray.push({name : name, selectedField : selectedField});
+                        if(res.data.length > 0){
+                            var productArray = [];
+                            productArray.push({
+                                id: this.state.products1.length,
+                                workOrderId : res.data[0].barcodeNo,
+                                createdDate: new Date(res.data[0].createdDate).toString(),
+                                status: res.data[0].status,
+                                sponsor: res.data[0].sponsor,
+                                parentSamples: res.data[0].itemCount,
+                                createdBy : res.data[0].createdby
+                            });
+                            console.log(productArray );
+                            this.setState({
+                                products1 : productArray
+                            });
+                            queryArray.push({name : name, selectedField : selectedField});
+                        }
                     },
                     (error) => {console.log(error)});
         }
 
         if(queryArray.length===1) {
-            axios.get('http://localhost:8081/gclportal/api/workorder/getWorkOrderSearchResults?'+queryArray[0].name+ '=' + queryArray[0].selectedField +'&'+ name+ '=' + selectedField)
+            axios.get('http://xtest3.ppdi.com/gclportal/api/workorder/getWorkOrderSearchResults?'+queryArray[0].name+ '=' + queryArray[0].selectedField +'&'+ name+ '=' + selectedField)
                 .then( (res) => {
                         console.log(res.data);
-                        var productArray = []
-                        productArray.push({
-                            id: this.state.products1.length,
-                            workOrderId : res.data[0].barcodeNo,
-                            createdDate: new Date(res.data[0].createdDate).toString(),
-                            status: res.data[0].status,
-                            sponsor: res.data[0].sponsor,
-                            parentSamples: res.data[0].itemCount,
-                            createdBy : res.data[0].createdby
-                        });
-                        console.log(productArray );
-                        this.setState({
-                            products1 : productArray
-                        });
-                        queryArray.push({name : name, selectedField : selectedField});
+                        if(res.data.length > 0) {
+                            var productArray = [];
+                            productArray.push({
+                                id: this.state.products1.length,
+                                workOrderId : res.data[0].barcodeNo,
+                                createdDate: new Date(res.data[0].createdDate).toString(),
+                                status: res.data[0].status,
+                                sponsor: res.data[0].sponsor,
+                                parentSamples: res.data[0].itemCount,
+                                createdBy : res.data[0].createdby
+                            });
+                            console.log(productArray );
+                            this.setState({
+                                products1 : productArray
+                            });
+                            queryArray.push({name : name, selectedField : selectedField});
+                        }
+
                     },
                     (error) => {console.log(error)});
         }
@@ -137,11 +171,11 @@ class SearchWorkOrder extends Component {
                     <form >
                         <div className="row">
 
-                                <LiveSearch liveSearchData={liveLocationSearchData} notifyParent={this.notifyParent} liveSearchDataTitle="Location"/>
+                                <LiveSearch liveSearchData={this.state.liveLocationSearchData} notifyParent={this.notifyParent} liveSearchDataTitle="Location"/>
 
-                                <LiveSearch liveSearchData={liveStudySearchData} notifyParent={this.notifyParent} liveSearchDataTitle="Study"/>
+                                <LiveSearch liveSearchData={this.state.liveStudySearchData} notifyParent={this.notifyParent} liveSearchDataTitle="Study"/>
 
-                                <LiveSearch liveSearchData={liveWorkOrderIdSearchData} notifyParent={this.notifyParent} liveSearchDataTitle="Sponsor"/>
+                                <LiveSearch liveSearchData={this.state.liveSponsorSearchData} notifyParent={this.notifyParent} liveSearchDataTitle="Sponsor"/>
 
                             <div className="col-xl">
                                 <label className="label">Parent Barcode</label>
