@@ -3,12 +3,12 @@ import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import '../../../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import SheetJSApp from "../ImportFromExcel/ImportData";
 import './PaginationTable.css';
-import ExportToExcel from "../ExportToExcel/ExportToExcel";
 import { ImportDataValidation } from "../Helpers";
 import { styles  } from "../Constants";
+import axios from "axios/index";
 
 
-var validationResult;
+let validationResult;
 
 class PaginationTable extends React.Component {
     
@@ -17,36 +17,56 @@ class PaginationTable extends React.Component {
         super(props);
         this.state = {
           submittedData : props.submittedData,
-          DataFromXlsx : ''
+          DataFromXlsx : []
         };
         this.onAfterDeleteRow = this.onAfterDeleteRow.bind(this);
         this.handleData = this.handleData.bind(this);
+        this.completeWorkOrder = this.completeWorkOrder.bind(this);
     }
 
-    handleData(data) {
+    handleData(data,file) {
         validationResult = ImportDataValidation(data, this.state.submittedData);
 
         if (validationResult.isValid) {
-          this.setState({
-              DataFromXlsx : data
-           });
-        let newAddedData = this.state.submittedData.slice();
-         for (var i=1; i< this.state.DataFromXlsx.length;i++) {
-             newAddedData.push({
-                    id : newAddedData.length +1,
-                    barcode: (this.state.DataFromXlsx[i][0]=== '' || this.state.DataFromXlsx[i][0]=== undefined) ? 'N/A' : this.state.DataFromXlsx[i][0] ,
-                    volume: (this.state.DataFromXlsx[i][1]=== '' || this.state.DataFromXlsx[i][1]=== undefined) ? 'N/A' : this.state.DataFromXlsx[i][1]  ,
-                    sampleType:(this.state.DataFromXlsx[i][2]=== '' || this.state.DataFromXlsx[i][2]=== undefined) ? 'N/A' :  this.state.DataFromXlsx[i][2] ,
-                    uom : (this.state.DataFromXlsx[i][3]=== '' || this.state.DataFromXlsx[i][3]=== undefined) ? 'N/A' : this.state.DataFromXlsx[i][3] ,
-                    sponsor : (this.state.DataFromXlsx[i][4]=== '' || this.state.DataFromXlsx[i][4]=== undefined) ? 'N/A' : this.state.DataFromXlsx[i][4] ,
-                    study: (this.state.DataFromXlsx[i][5]=== '' || this.state.DataFromXlsx[i][5]=== undefined) ? 'N/A' : this.state.DataFromXlsx[i][5]
-                })
-         }
 
-       this.setState({
-           submittedData : newAddedData
-       });
-       this.props.editSubmittedData(this.state.submittedData);
+                    let bodyFormData = new FormData();
+                    if(!!this.props.workOrderId) {
+                        bodyFormData.set('bioworkorderno',this.props.workOrderId);
+                    } else {
+                        bodyFormData.set('bioworkorderno','');
+                    }
+                    bodyFormData.set('file', file);
+                    axios({
+                        method: 'post', url: 'http://localhost:8081/gclportal/api/workorder/importWorkOrder',
+                        data : bodyFormData
+                    }).then((res)=> {
+                        console.log(res.data);
+                        this.setState({
+                            DataFromXlsx : res.data
+                        });
+                        this.props.setWorkOrderId(res.data[0].workOrderNo);
+
+                        let newAddedData = this.state.submittedData.slice();
+                        for (let i=0; i<this.state.DataFromXlsx.length;i++) {
+                            newAddedData.push({
+                                id: newAddedData.length + 1,
+                                barcode: this.state.DataFromXlsx[i].barcode,
+                                volume : this.state.DataFromXlsx[i].sampleVolume,
+                                sampleType: this.state.DataFromXlsx[i].sampleType,
+                                uom: this.state.DataFromXlsx[i].uom,
+                                sponsor: this.state.DataFromXlsx[i].sponsor,
+                                study: this.state.DataFromXlsx[i].studyCode
+                            })
+                        }
+                        console.log(newAddedData);
+                        this.setState({
+                            submittedData : newAddedData
+                        });
+
+                        this.props.editSubmittedData(this.state.submittedData);
+                    }, (error)=>{
+                        console.log(error);
+                    });
 
         }
 
@@ -55,6 +75,21 @@ class PaginationTable extends React.Component {
         }
 
     }
+    completeWorkOrder = (barcode) => {
+        console.log('here');
+        axios({
+            method: 'post', url: 'http://localhost:8081/gclportal/api/workorder/updateWorkOrder?workOrderId=' + this.props.workOrderId,
+            data :  { "barCodes":[ {
+                    "barcode":'0072373881',
+                    "volume":'10',
+                    "uom":'ml'}]
+            }
+        }).then((res)=> {
+            console.log(res.data);
+        }, (error)=>{
+            console.log(error);
+        })
+    };
     componentWillReceiveProps(newProps) {
         if(newProps.submittedData!==this.state.submittedData){
             this.setState({ submittedData : newProps.submittedData});
@@ -63,6 +98,17 @@ class PaginationTable extends React.Component {
     }
 
     onAfterDeleteRow = (rowKeys) => {
+        console.log(rowKeys.length);
+
+        for(let i=0;i<rowKeys.length;i++) {
+            axios({
+                method: 'delete', url: 'http://localhost:8081/gclportal/api/workorder/deletebarcode?bioworkOrderNo='+ this.props.workOrderId+'&barcode=' + this.state.submittedData[rowKeys[i]-1].barcode
+            }).then((res)=> {
+                console.log(res.data);
+            }, (error)=>{
+                console.log(error);
+            });
+        }
         this.state.submittedData.splice(rowKeys[0]-1,rowKeys.length);
         this.state.submittedData.map((data,index) => {
             return data.id = index + 1;
@@ -71,8 +117,6 @@ class PaginationTable extends React.Component {
 
     };
 
-
-    
     render() {
 
         const options = {
@@ -126,15 +170,18 @@ class PaginationTable extends React.Component {
                     <div className="row justify-content-md-center">
 
                         <SheetJSApp dataHandler={this.handleData} />
-
-                        <ExportToExcel exportedData={this.state.submittedData} />
-
+                        
+                        <div className="col-sm-2">
+                            <button className="btn btn-primary"><a href={ "http://localhost:8081/gclportal/api/workorder/exportworkorder?workOrderId=" + this.props.workOrderId} target="_blank">Export</a></button>
+                        </div>
 
                         <div className="col-sm-2">
                             <div className="form-group">
-                                <button className="btn btn-success">Completed</button>
+                                <button className="btn btn-success" onClick={this.completeWorkOrder}>Completed</button>
                             </div>
                         </div>
+
+
 
                     </div>
                 </div>

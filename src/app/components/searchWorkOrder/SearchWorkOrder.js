@@ -7,21 +7,22 @@ import {Link} from "react-router-dom";
 import Workbook from 'react-excel-workbook';
 import axios from "axios/index";
 
-const liveLocationSearchData = ['xyz'];
-const liveWorkOrderIdSearchData = ["Mustard", "Ketchup", "Relish"];
+// const liveWorkOrderIdSearchData = ["Mustard", "Ketchup", "Relish"];
 const liveSavedSearchData = ["Save1", "Save2", "Save3", "Save4"];
 const liveStatusSearchData = ["Created", "In Progress", "Completed", "Cancelled"];
 let selectedRow = [{workOrderId:'', status : ''}];
 let queryArray =[];
+let queryObj = {};
 
 function buildUrl(name, selectedField) {
     let str = 'http://xtest3.ppdi.com/gclportal/api/workorder/getWorkOrderSearchResults?';
-    for(let i=0;i<queryArray.length;i++) {
-        str += queryArray[i].name + '='+ queryArray[i].status + '&';
+    queryObj[name] = selectedField;
+    for(let i=0;i<Object.keys(queryObj).length;i++) {
+        if(Object.keys(queryObj)[i] !== undefined) {
+            str += Object.keys(queryObj)[i] + '='+  queryObj[Object.keys(queryObj)[i]] + '&';
+        }
     }
 
-    str += name + '=' + selectedField;
-    queryArray.push({name : name, selectedField : selectedField});
     return str;
 };
 
@@ -153,7 +154,7 @@ class SearchWorkOrder extends Component {
                     <form >
                         <div className="row">
 
-                                <LiveSearch liveSearchData={liveLocationSearchData} notifyParent={this.notifyParent} liveSearchDataTitle="Location"/>
+                                <LiveSearch liveSearchData={this.state.liveLocationSearchData} notifyParent={this.notifyParent} liveSearchDataTitle="Location"/>
 
                                 <LiveSearch liveSearchData={this.state.liveStudySearchData} notifyParent={this.notifyParent} liveSearchDataTitle="Study"/>
 
@@ -164,9 +165,9 @@ class SearchWorkOrder extends Component {
                                 <input type="text" placeholder="Enter "/>
                             </div>
 
-                            <LiveSearch liveSearchData={liveStatusSearchData} liveSearchDataTitle="Status"/>
+                            <LiveSearch liveSearchData={liveStatusSearchData} notifyParent={this.notifyParent} liveSearchDataTitle="Status"/>
 
-                            <LiveSearch liveSearchData={liveSavedSearchData} liveSearchDataTitle="SAVE"/>
+                            <LiveSearch liveSearchData={liveSavedSearchData} notifyParent={this.notifyParent} liveSearchDataTitle="SAVE"/>
 
                         </div>
                     </form>
@@ -200,14 +201,11 @@ class SearchWorkOrder extends Component {
                             </Workbook>
                         </div>
                         <div className="col-sm-2">
-                            <button className="btn btn-primary" disabled={!this.state.statusFlag[2]}>QC Scan</button>
-                        </div>
-                        <div className="col-sm-2">
                             <button className="btn btn-primary" disabled={!this.state.statusFlag[3]}>Create Aliquot</button>
                         </div>
-                        <div className="col-sm-2">
-                            <button className="btn btn-primary" disabled={!this.state.statusFlag[4]}>Create Batch</button>
-                        </div>
+                        {/*<div className="col-sm-2">*/}
+                            {/*<button className="btn btn-primary" disabled={!this.state.statusFlag[4]}>Create Batch</button>*/}
+                        {/*</div>*/}
 
                     </div>
                 </div>

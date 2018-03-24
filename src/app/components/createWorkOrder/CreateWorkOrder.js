@@ -8,12 +8,19 @@ class CreateWorkOrder extends Component {
   constructor(props) {
     super(props);
     this.state = {
-          items:[]
+          items:[],
+          workOrderId : ''
          };
     this.getFormItems = this.getFormItems.bind(this);
     this.editSubmittedData = this.editSubmittedData.bind(this);
+    this.setWorkOrderId = this.setWorkOrderId.bind(this);
   }
 
+    setWorkOrderId(workOrderId) {
+      this.setState({
+          workOrderId : workOrderId
+      })
+    }
 getFormItems (items) {
    this.setState({
         items : items
@@ -32,11 +39,11 @@ getFormItems (items) {
         <CreateWorkOrderHeader headerTitle={headerTitle}/>
 
         <div className="container">
-          <WorkOrderForm  items={this.state.items}  getFormItems={this.getFormItems}/>
+          <WorkOrderForm  items={this.state.items}  getFormItems={this.getFormItems} setWorkOrderId = {this.setWorkOrderId}/>
         </div>
 
         <div className="container">
-          <PaginationTable submittedData={this.state.items} editSubmittedData={this.editSubmittedData}/>
+          <PaginationTable submittedData={this.state.items} editSubmittedData={this.editSubmittedData} workOrderId={this.state.workOrderId} setWorkOrderId = {this.setWorkOrderId}/>
         </div>
 
       </div>

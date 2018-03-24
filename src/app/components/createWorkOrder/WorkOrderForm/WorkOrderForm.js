@@ -2,6 +2,7 @@ import React from 'react';
 import { formStyles  } from "../Constants";
 import axios from 'axios';
 
+let workOrderId;
 export default class WorkOrderForm extends React.Component {
     constructor(props) {
         super(props);
@@ -17,6 +18,7 @@ export default class WorkOrderForm extends React.Component {
         };
         this.onFormSubmit = this.onFormSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.updateWorkOrder=this.updateWorkOrder.bind(this);
         this.findBarcodeData = this.findBarcodeData.bind(this);
     }
 
@@ -26,35 +28,39 @@ export default class WorkOrderForm extends React.Component {
         }
 
     }
-
-    saveWorkOrder = (barcode) => {
+    updateWorkOrder = (barcode) => {
         console.log('here');
         axios({
-            method: 'post', url: 'https://crossorigin.me/http://xtest3.ppdi.com/gclportal/api/workorder/saveWorkOrder', data :  {'barCodes' : ['A72260415J0'] }
+            method: 'post', url: 'http://localhost:8081/gclportal/api/workorder/saveWorkOrder',
+            data :  { "bioaWorkorderNo":workOrderId,
+                "barCodes":[ {
+                    "barcode":this.state.barcode,
+                    "volume":this.state.volume,
+                    "uom":this.state.uom}]
+            }
         }).then((res)=> {
             console.log(res.data);
         }, (error)=>{
             console.log(error);
         })
-      /*  var data = JSON.stringify({
-            "barCodes": [
-                "A72260415J0"
-            ]
-        });
-
-        var xhr = new XMLHttpRequest();
-
-        xhr.addEventListener("readystatechange", function () {
-            if (this.readyState === 4) {
-                console.log(this.responseText);
+    };
+    saveWorkOrder = (barcode) => {
+        console.log('here');
+        axios({
+            method: 'post', url: 'http://localhost:8081/gclportal/api/workorder/saveWorkOrder',
+            data :  { "bioaWorkorderNo":null,
+                "barCodes":[ {
+                    "barcode":this.state.barcode,
+                    "volume":this.state.volume,
+                    "uom":this.state.uom}]
             }
-        });
-
-        xhr.open("POST", "https://crossorigin.me/http://xtest3.ppdi.com/gclportal/api/workorder/saveWorkOrder");
-        xhr.setRequestHeader("Content-Type", "application/json");
-
-
-        xhr.send(data); */
+        }).then((res)=> {
+            console.log(res.data);
+            workOrderId = res.data.bioaWorkorderNo;
+            this.props.setWorkOrderId(workOrderId);
+        }, (error)=>{
+            console.log(error);
+        })
     };
     onFormSubmit(event){
         event.preventDefault();
@@ -77,7 +83,11 @@ export default class WorkOrderForm extends React.Component {
                 study: this.state.study
             });
         }
-        this.saveWorkOrder(this.state.barcode);
+        if(this.state.items.length > 0) {
+            this.updateWorkOrder(this.state.barcode)
+        } else {
+            this.saveWorkOrder(this.state.barcode);
+        }
         this.setState({
             items,
             barcode: '',
@@ -102,7 +112,15 @@ export default class WorkOrderForm extends React.Component {
                         study: res.data.studyCode
                     })
                 },
-                (error) => {console.log(error)});
+                (error) => {console.log(error);
+                    this.setState({
+                        sampleType: '',
+                        volume: '',
+                        uom: '',
+                        sponsor: '',
+                        study: ''
+                    })
+            });
     };
 
     handleChange(event) {

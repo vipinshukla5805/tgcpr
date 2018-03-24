@@ -20,13 +20,26 @@ class UpdateWorkOrder extends Component {
 
     changeStatusToCompleted = () => {
         if(this.state.status === 'Created' || this.state.status === 'In Progress') {
-            this.setState({ status: 'Completed'});
-            Alert.info('Status Changed to Completed', {
-                position: 'top-right',
-                effect: 'scale',
-                timeout: 2000,
-                offset : 80
-            });
+           let confirmComplete = window.confirm('You sure you want to change status to completed?');
+            if(confirmComplete) {
+                axios.post(' http://localhost:8081/gclportal/api/workorder/completedworkorder?bioaworkOrderNo=' + this.state.workOrderId)
+                    .then( (res) => {
+                            console.log(res.data);
+                            this.setState({
+                                products : res.data
+                            })
+                        },
+                        (error) => {console.log(error)});
+
+                this.setState({ status: 'Completed'});
+                Alert.info('Status Changed to Completed', {
+                    position: 'top-right',
+                    effect: 'scale',
+                    timeout: 2000,
+                    offset : 80
+                });
+            }
+
         }
     };
 
@@ -102,7 +115,7 @@ class UpdateWorkOrder extends Component {
                             </div>
                             <div className="col-sm-1">
                                 <label className="label">Total</label>
-                                <input type="text" className="form-control form-control-sm" value={this.state.products.length} disabled={true}></input>
+                                <input type="text" className="form-control form-control-sm" defaultValue={this.state.products.length} disabled={true}></input>
                             </div>
 
                         </div>
@@ -135,7 +148,7 @@ class UpdateWorkOrder extends Component {
                             <button className="btn btn-primary" onClick={this.changeStatusToCompleted}>Complete</button>
                         </div>
                         <div className="col-sm-2">
-                            <ExportToExcel exportedData={this.state.products} />
+                            <button className="btn btn-primary"><a href={ "http://localhost:8081/gclportal/api/workorder/exportworkorder?workOrderId=" + this.state.workOrderId} target="_blank">Export</a></button>
                         </div>
                         <div className="col-sm-2">
                             <button className="btn btn-primary" onClick={this.changeStatusToCancelled}>Cancel</button>
