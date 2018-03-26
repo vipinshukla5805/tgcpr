@@ -3,8 +3,6 @@ import {Typeahead} from 'react-bootstrap-typeahead';
 
 export default class LiveSearch extends Component {
     onChange = name => value =>{
-         if(name==='Study') { name='studyCode';}
-         if(name==='Location') {name='location';}
          this.props.notifyParent(name,value);
     };
 
@@ -15,7 +13,7 @@ export default class LiveSearch extends Component {
                 <Typeahead
                     labelKey="name"
                     bsSize="small"
-                    onChange={this.onChange(this.props.liveSearchDataTitle)}
+                    onChange={this.onChange(this.props.liveSearchDataResponse)}
                     options={this.props.liveSearchData}
                     placeholder="None Selected"
                 />

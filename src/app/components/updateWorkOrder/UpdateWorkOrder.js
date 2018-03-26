@@ -2,11 +2,12 @@ import React, {Component} from 'react';
 import './update.css';
 import Header from "../header/Header";
 import {BootstrapTable, TableHeaderColumn} from "react-bootstrap-table";
-import ExportToExcel from "../createWorkOrder/ExportToExcel/ExportToExcel";
 import Alert from 'react-s-alert';
 import 'react-s-alert/dist/s-alert-default.css';
 import 'react-s-alert/dist/s-alert-css-effects/scale.css';
 import axios from 'axios';
+import { Link } from "react-router-dom";
+import {Redirect} from 'react-router'
 
 class UpdateWorkOrder extends Component {
     constructor(props) {
@@ -15,7 +16,8 @@ class UpdateWorkOrder extends Component {
         this.state = {
             status : props.match.params.status,
             workOrderId : props.match.params.workOrderId,
-            products: []
+            products: [],
+            redirect : false
     }}
 
     changeStatusToCompleted = () => {
@@ -31,13 +33,7 @@ class UpdateWorkOrder extends Component {
                         },
                         (error) => {console.log(error)});
 
-                this.setState({ status: 'Completed'});
-                Alert.info('Status Changed to Completed', {
-                    position: 'top-right',
-                    effect: 'scale',
-                    timeout: 2000,
-                    offset : 80
-                });
+                this.setState({ status: 'Completed', redirect : true});
             }
 
         }
@@ -45,15 +41,23 @@ class UpdateWorkOrder extends Component {
 
     changeStatusToCancelled = () => {
         if(this.state.status === 'Created' || this.state.status === 'In Progress') {
-            this.setState({ status: 'Cancelled'});
-            Alert.info('Status Changed to Cancelled', {
-                position: 'top-right',
-                effect: 'scale',
-                offset : 80,
-                timeout: 2000
-            });
-        }
+            let confirmCancel = window.confirm('You sure you want to change status to cancelled?');
+            if(confirmCancel) {
+                axios.post(' http://localhost:8081/gclportal/api/workorder/cancelworkorder?bioaworkOrderNo=' + this.state.workOrderId)
+                    .then((res) => {
+                            console.log(res.data);
+                            this.setState({
+                                products: res.data
+                            })
+                        },
+                        (error) => {
+                            console.log(error)
+                        });
+            };
+                this.setState({ status: 'Cancelled' , redirect : true});
+            }
     };
+
     handleChange(event) {
         this.setState({
             [event.target.id]: event.target.value
@@ -115,7 +119,7 @@ class UpdateWorkOrder extends Component {
                             </div>
                             <div className="col-sm-1">
                                 <label className="label">Total</label>
-                                <input type="text" className="form-control form-control-sm" defaultValue={this.state.products.length} disabled={true}></input>
+                                <input type="text" className="form-control form-control-sm" value={this.state.products.length} disabled={true}></input>
                             </div>
 
                         </div>
@@ -156,6 +160,7 @@ class UpdateWorkOrder extends Component {
 
                     </div>
                 </div>
+                {(this.state.redirect) ? <Redirect to="/searchWorkOrder"/>  : <div></div>}
             </div>
         );
     }

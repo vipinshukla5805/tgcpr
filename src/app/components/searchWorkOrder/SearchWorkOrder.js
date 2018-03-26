@@ -7,16 +7,18 @@ import {Link} from "react-router-dom";
 import Workbook from 'react-excel-workbook';
 import axios from "axios/index";
 
-// const liveWorkOrderIdSearchData = ["Mustard", "Ketchup", "Relish"];
 const liveSavedSearchData = ["Save1", "Save2", "Save3", "Save4"];
 const liveStatusSearchData = ["Created", "In Progress", "Completed", "Cancelled"];
 let selectedRow = [{workOrderId:'', status : ''}];
-let queryArray =[];
 let queryObj = {};
 
 function buildUrl(name, selectedField) {
     let str = 'http://xtest3.ppdi.com/gclportal/api/workorder/getWorkOrderSearchResults?';
-    queryObj[name] = selectedField;
+    if(!!selectedField[0]) {
+        queryObj[name] = selectedField;
+    } else {
+        delete queryObj[name];
+    }
     for(let i=0;i<Object.keys(queryObj).length;i++) {
         if(Object.keys(queryObj)[i] !== undefined) {
             str += Object.keys(queryObj)[i] + '='+  queryObj[Object.keys(queryObj)[i]] + '&';
@@ -35,38 +37,14 @@ class SearchWorkOrder extends Component {
             liveStudySearchData : [],
             liveSponsorSearchData : [],
             selectedExportRows : [],
-            products1 : [
-                {
-                    id : 1,
-                    workOrderId: '199208',
-                    createDate: 'Sat Mar 17 2018 11:48:05 GMT+0530 (EST)',
-                    status: 'Created',
-                    sponsor: 'Nad',
-                    parentSamples : '5',
-                    createdBy : 'Amer',
-                    aliquot : '36' },
-                {
-                    id : 2,
-                    workOrderId: '687356',
-                    createDate: 'Sat Mar 17 2018 11:48:05 GMT+0530 (EST)',
-                    status: 'In Progress',
-                    sponsor: 'Mark',
-                    parentSamples : '4',
-                    createdBy : 'sam',
-                    aliquot : '14' },
-                {
-                    id : 3,
-                    workOrderId: '100090',
-                    createDate: 'Sat Oct 01 2014 11:48:05 GMT+0530 (EST)',
-                    status: 'Completed',
-                    sponsor: 'Forest Inst',
-                    parentSamples : '7',
-                    createdBy : 'jay',
-                    aliquot : '20'}]
+            products1 : []
         };
         this.handleExportSelectedRows = this.handleExportSelectedRows.bind(this);
         this.handleStatusChange = this.handleStatusChange.bind(this);
         this.handleStatusCompletedFlag = this.handleStatusCompletedFlag.bind(this);
+        this.notifyParent = this.notifyParent.bind(this);
+        this.handleParentBarCode = this.handleParentBarCode.bind(this)
+
 }
 
     handleStatusChange = (isStatusFlag) => {
@@ -122,30 +100,41 @@ class SearchWorkOrder extends Component {
     };
 
     notifyParent = (name,selectedField) => {
-
-            axios.get(buildUrl(name,selectedField))
+         axios.get(buildUrl(name,selectedField))
                 .then( (res) => {
                         console.log(res.data);
                         if(res.data.length > 0){
-                            var productArray = [];
-                            productArray.push({
-                                id: this.state.products1.length,
-                                workOrderId : res.data[0].barcodeNo,
-                                createdDate: new Date(res.data[0].createdDate).toString(),
-                                status: res.data[0].status,
-                                sponsor: res.data[0].sponsor,
-                                parentSamples: res.data[0].itemCount,
-                                createdBy : res.data[0].createdby
-                            });
+                            let productArray = [];
+
+                            for(let i=0;i<res.data.length;i++){
+                                productArray.push({
+                                    id: productArray.length,
+                                    workOrderId : res.data[i].barcodeNo,
+                                    createdDate: new Date(res.data[i].createdDate).toString(),
+                                    status: res.data[i].status,
+                                    sponsor: res.data[i].sponsor,
+                                    parentSamples: res.data[i].itemCount,
+                                    createdBy : res.data[i].createdby
+                                });
+                            }
+
                             console.log(productArray );
                             this.setState({
                                 products1 : productArray
+                            });
+                        } else {
+                            this.setState({
+                                products1 : []
                             });
                         }
                     },
                     (error) => {console.log(error)});
 
     };
+
+    handleParentBarCode(event){
+       this.notifyParent('parentBarcode', event.target.value)
+    }
     render() {
         return (
             <div>
@@ -154,18 +143,18 @@ class SearchWorkOrder extends Component {
                     <form >
                         <div className="row">
 
-                                <LiveSearch liveSearchData={this.state.liveLocationSearchData} notifyParent={this.notifyParent} liveSearchDataTitle="Location"/>
+                                <LiveSearch liveSearchData={this.state.liveLocationSearchData} notifyParent={this.notifyParent} liveSearchDataTitle="Location" liveSearchDataResponse="location"/>
 
-                                <LiveSearch liveSearchData={this.state.liveStudySearchData} notifyParent={this.notifyParent} liveSearchDataTitle="Study"/>
+                                <LiveSearch liveSearchData={this.state.liveStudySearchData} notifyParent={this.notifyParent} liveSearchDataTitle="Study" liveSearchDataResponse="studyCode"/>
 
-                                <LiveSearch liveSearchData={this.state.liveSponsorSearchData} notifyParent={this.notifyParent} liveSearchDataTitle="Sponsor"/>
+                                <LiveSearch liveSearchData={this.state.liveSponsorSearchData} notifyParent={this.notifyParent} liveSearchDataTitle="Sponsor" liveSearchDataResponse="sponsor"/>
 
                             <div className="col-xl">
                                 <label className="label">Parent Barcode</label>
-                                <input type="text" placeholder="Enter "/>
+                                <input id='parentBarcode' onChange={this.handleParentBarCode} type="text" placeholder="Enter "/>
                             </div>
 
-                            <LiveSearch liveSearchData={liveStatusSearchData} notifyParent={this.notifyParent} liveSearchDataTitle="Status"/>
+                            <LiveSearch liveSearchData={liveStatusSearchData} notifyParent={this.notifyParent} liveSearchDataTitle="Status" liveSearchDataResponse="status"/>
 
                             <LiveSearch liveSearchData={liveSavedSearchData} notifyParent={this.notifyParent} liveSearchDataTitle="SAVE"/>
 
