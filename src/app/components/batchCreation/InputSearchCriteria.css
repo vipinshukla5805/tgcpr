@@ -1,0 +1,19 @@
+
+.jumbotron {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    background-color: #800080c4;
+    color: white;
+}
+
+.form-inline {
+    padding-top: 10px;
+}
+
+.myHalfCol .col-lg-6{padding:0 10px;}
+
+
+.textBox {
+    height: 80px;
+    width: 240px
+}
