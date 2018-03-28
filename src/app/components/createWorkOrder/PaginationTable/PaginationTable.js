@@ -7,11 +7,11 @@ import { ImportDataValidation } from "../Helpers";
 import { styles  } from "../Constants";
 import axios from "axios/index";
 
-
 let validationResult;
 
+
 class PaginationTable extends React.Component {
-    
+
 
     constructor(props) {
         super(props);
@@ -46,6 +46,7 @@ class PaginationTable extends React.Component {
                         });
                         this.props.setWorkOrderId(res.data[0].workOrderNo);
 
+
                         let newAddedData = this.state.submittedData.slice();
                         for (let i=0; i<this.state.DataFromXlsx.length;i++) {
                             newAddedData.push({
@@ -77,20 +78,44 @@ class PaginationTable extends React.Component {
     }
     completeWorkOrder = (barcode) => {
         console.log('here');
+        console.log(this.props.workOrderId);
         axios({
-            method: 'post', url: 'http://localhost:8081/gclportal/api/workorder/updateWorkOrder?workOrderId=' + this.props.workOrderId,
-            data :  { "barCodes":[ {
-                    "barcode":'0072373881',
-                    "volume":'10',
-                    "uom":'ml'}]
-            }
+            method: 'post', url: 'http://localhost:8081/gclportal/api/workorder/updateWorkOrder?workOrderId='+ sessionStorage.getItem('savedWorkOrderId')
         }).then((res)=> {
             console.log(res.data);
+            alert('Your Work Order is created successfully.');
+            this.setState({
+                submittedData : []
+            })
+            this.props.editSubmittedData(this.state.submittedData);
+
+            sessionStorage.clear();
+
+
         }, (error)=>{
             console.log(error);
         })
+
     };
+
+
+    componentDidMount() {
+        if(!!sessionStorage.getItem('savedWorkOrderId')) {
+            axios.get('http://xtest3.ppdi.com/gclportal/api/workorder/bioaworkorder?bioaworkOrderNo=' + sessionStorage.getItem('savedWorkOrderId'))
+                .then( (res) => {
+                        console.log(res.data);
+                        this.setState({
+                            submittedData : res.data
+                        })
+                        this.props.editSubmittedData(this.state.submittedData);
+                    },
+                    (error) => {console.log(error)});
+        }
+    }
     componentWillReceiveProps(newProps) {
+        if(!!newProps.workOrderId){
+            sessionStorage.setItem('savedWorkOrderId', newProps.workOrderId)
+        }
         if(newProps.submittedData!==this.state.submittedData){
             this.setState({ submittedData : newProps.submittedData});
         }
@@ -99,7 +124,6 @@ class PaginationTable extends React.Component {
 
     onAfterDeleteRow = (rowKeys) => {
         console.log(rowKeys.length);
-
         for(let i=0;i<rowKeys.length;i++) {
             axios({
                 method: 'delete', url: 'http://localhost:8081/gclportal/api/workorder/deletebarcode?bioworkOrderNo='+ this.props.workOrderId+'&barcode=' + this.state.submittedData[rowKeys[i]-1].barcode

@@ -46,3 +46,17 @@
     background-color: lightgray;
     cursor: none;
 }
+
+.col-xl-2{
+    display: inline-flex;;
+}
+/*.criteria{*/
+    /*width: 124px;*/
+    /*margin-left: -15px;*/
+    /*padding-top: 7px;*/
+/*}*/
+
+.default{
+    height: 30px;
+}
+

@@ -47,7 +47,7 @@ class UpdateWorkOrder extends Component {
                     .then((res) => {
                             console.log(res.data);
                             this.setState({
-                                products: res.data
+                                products : res.data
                             })
                         },
                         (error) => {
@@ -68,12 +68,42 @@ class UpdateWorkOrder extends Component {
         axios.get('http://xtest3.ppdi.com/gclportal/api/workorder/bioaworkorder?bioaworkOrderNo=' + this.state.workOrderId)
             .then( (res) => {
                 console.log(res.data);
+                    let getUpdatedData=[];
+                    for(let i=0;i<res.data.length;i++){
+                        getUpdatedData.push({
+                            id : getUpdatedData.length + 1,
+                            barcode: res.data[i].barcode,
+                            volume : res.data[i].sampleVolume,
+                            sampleType: res.data[i].sampleType,
+                            uom: res.data[i].uom,
+                            sponsor: res.data[i].sponsor,
+                            study: res.data[i].studyCode
+                        });
+                    }
                     this.setState({
-                        products : res.data
+                        products: getUpdatedData
                     })
                 },
                 (error) => {console.log(error)});
     }
+
+    onAfterDeleteRow = (rowKeys) => {
+        console.log(rowKeys.length);
+        for(let i=0;i<rowKeys.length;i++) {
+            axios({
+                method: 'delete', url: 'http://localhost:8081/gclportal/api/workorder/deletebarcode?bioworkOrderNo='+ this.state.workOrderId+'&barcode=' + this.state.products[rowKeys[i]-1].barcode
+            }).then((res)=> {
+                console.log(res.data);
+            }, (error)=>{
+                console.log(error);
+            });
+        }
+        this.state.products.splice(rowKeys[0]-1,rowKeys.length);
+        this.state.products.map((data,index) => {
+            return data.id = index + 1;
+        });
+
+    };
     render() {
         console.log(this.state.products);
         const options = {

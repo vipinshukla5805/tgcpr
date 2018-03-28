@@ -6,28 +6,28 @@ let isStatusFlag = [false, false, false, false, false];
 let allStatusFlags = [false , false];
 let selectedRows = [];
 
-const statusType = {
-    0: 'Created',
-    1: 'In Progress',
-    2: 'Completed',
-    3 : 'Cancelled'
-};
-
-function statusFormatter(cell, row, enumObject) {
-    if(cell !== "1" && cell !== "2" && cell !== "3" && cell !== "0" ) {
-        if(cell === 'In Progress') {
-            cell = "1";
-        } else if(cell === 'Completed' ){
-            cell = "2"
-        } else if(cell === 'Created') {
-            cell="0";
-        } else {
-            cell = "3";
-        }
-    }
-
-    return enumObject[cell];
-}
+// const statusType = {
+//     0: 'Created',
+//     1: 'In Progress',
+//     2: 'Completed',
+//     3 : 'Cancelled'
+// };
+//
+// function statusFormatter(cell, row, enumObject) {
+//     if(cell !== "1" && cell !== "2" && cell !== "3" && cell !== "0" ) {
+//         if(cell === 'In Progress') {
+//             cell = "1";
+//         } else if(cell === 'Completed' ){
+//             cell = "2"
+//         } else if(cell === 'Created') {
+//             cell="0";
+//         } else {
+//             cell = "3";
+//         }
+//     }
+//
+//     return enumObject[cell];
+// }
 
 class SearchPagination extends React.Component {
 
@@ -166,7 +166,7 @@ class SearchPagination extends React.Component {
                     <TableHeaderColumn width="39" dataField='id' isKey={true} hidden={true}>#</TableHeaderColumn>
                     <TableHeaderColumn ref='workOrderIdCol'dataField='workOrderId' dataSort={true} width="13%"filter={ { type: 'TextFilter', placeholder:"Enter" } }>Work Order Id</TableHeaderColumn>
                     <TableHeaderColumn dataField='createDate' dataSort={true} width="18%" dataFormat={ this.dateFormatter } filter={ { type: 'DateFilter' , defaultValue: { comparator: '=' } , placeholder:"dd/mm/yyyy"} }>Create Date</TableHeaderColumn>
-                    <TableHeaderColumn dataField='status' width="10%" filterFormatted dataFormat={ statusFormatter } formatExtraData={ statusType } filter={ { type: 'SelectFilter', options: statusType} }>Status</TableHeaderColumn>
+                    <TableHeaderColumn dataField='status' width="10%" filter={ { type: 'TextFilter', placeholder:"Enter" } }>Status</TableHeaderColumn>
                     <TableHeaderColumn dataField='sponsor' width="10%" filter={ { type: 'TextFilter', placeholder:"Enter" } }>Sponsor</TableHeaderColumn>
                     <TableHeaderColumn dataField='parentSamples' tdStyle={ { whiteSpace: 'normal' } } width="20%"filter={ { type: 'TextFilter', placeholder:"Enter" } }>Total # of Parent Samples</TableHeaderColumn>
                     <TableHeaderColumn dataField='createdBy' filter={ { type: 'TextFilter', placeholder:"Enter" } }>Created By</TableHeaderColumn>

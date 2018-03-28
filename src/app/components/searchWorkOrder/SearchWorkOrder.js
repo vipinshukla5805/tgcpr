@@ -7,14 +7,15 @@ import {Link} from "react-router-dom";
 import Workbook from 'react-excel-workbook';
 import axios from "axios/index";
 
-const liveSavedSearchData = ["Save1", "Save2", "Save3", "Save4"];
 const liveStatusSearchData = ["Created", "In Progress", "Completed", "Cancelled"];
 let selectedRow = [{workOrderId:'', status : ''}];
 let queryObj = {};
+let exportUrl;
+
 
 function buildUrl(name, selectedField) {
     let str = 'http://xtest3.ppdi.com/gclportal/api/workorder/getWorkOrderSearchResults?';
-    if(!!selectedField[0]) {
+    if(!!selectedField && !!selectedField[0]) {
         queryObj[name] = selectedField;
     } else {
         delete queryObj[name];
@@ -37,13 +38,15 @@ class SearchWorkOrder extends Component {
             liveStudySearchData : [],
             liveSponsorSearchData : [],
             selectedExportRows : [],
+            liveSavedSearchData : [],
             products1 : []
         };
         this.handleExportSelectedRows = this.handleExportSelectedRows.bind(this);
         this.handleStatusChange = this.handleStatusChange.bind(this);
         this.handleStatusCompletedFlag = this.handleStatusCompletedFlag.bind(this);
         this.notifyParent = this.notifyParent.bind(this);
-        this.handleParentBarCode = this.handleParentBarCode.bind(this)
+        this.handleParentBarCode = this.handleParentBarCode.bind(this);
+        this.saveSearchedCriteria = this.saveSearchedCriteria.bind(this);
 
 }
 
@@ -54,6 +57,15 @@ class SearchWorkOrder extends Component {
     };
 
     componentDidMount() {
+            axios.get(' http://xtest3.ppdi.com/gclportal/api/workorder/getWorkOrderSearchCriteriaView')
+                .then( (res) => {
+                        console.log(res.data);
+                        this.setState({
+                            liveSavedSearchData : res.data
+                        })
+                    },
+                    (error) => {console.log(error)});
+
         axios.get('http://xtest3.ppdi.com/gclportal/api/workorder/getLocations')
             .then( (res) => {
                     console.log(res.data);
@@ -90,7 +102,17 @@ class SearchWorkOrder extends Component {
         console.log(selectedRows);
         this.setState ({
             selectedExportRows:selectedRows
-        })
+        });
+         exportUrl = "http://localhost:8081/gclportal/api/workorder/exportworkorder?"
+        if(!!selectedRows) {
+            for (let i = 0; i < selectedRows.length; i++) {
+                exportUrl += "workOrderId=" + selectedRows[i].workOrderId;
+                if (!!selectedRows[i + 1]) {
+                    exportUrl += '&';
+                }
+            }
+        }
+        console.log(this.state.selectedExportRows);
     };
 
     handleStatusCompletedFlag = (isStatusCompletedFlag) => {
@@ -100,38 +122,115 @@ class SearchWorkOrder extends Component {
     };
 
     notifyParent = (name,selectedField) => {
-         axios.get(buildUrl(name,selectedField))
-                .then( (res) => {
-                        console.log(res.data);
-                        if(res.data.length > 0){
+        if(name!=='save') {
+            axios.get(buildUrl(name, selectedField))
+                .then((res) => {
+                        if (res.data.length > 0) {
                             let productArray = [];
 
-                            for(let i=0;i<res.data.length;i++){
+                            for (let i = 0; i < res.data.length; i++) {
                                 productArray.push({
                                     id: productArray.length,
-                                    workOrderId : res.data[i].barcodeNo,
+                                    workOrderId: res.data[i].barcodeNo,
                                     createdDate: new Date(res.data[i].createdDate).toString(),
                                     status: res.data[i].status,
                                     sponsor: res.data[i].sponsor,
                                     parentSamples: res.data[i].itemCount,
-                                    createdBy : res.data[i].createdby
+                                    createdBy: res.data[i].createdby
                                 });
                             }
 
-                            console.log(productArray );
+                            console.log(productArray);
                             this.setState({
-                                products1 : productArray
+                                products1: productArray
                             });
                         } else {
                             this.setState({
-                                products1 : []
+                                products1: []
                             });
                         }
                     },
-                    (error) => {console.log(error)});
+                    (error) => {
+                        console.log(error)
+                    });
+        } else {
+            axios.get('http://xtest3.ppdi.com/gclportal/api/workorder/getWorkOrderSearchCriteriaMapping?criteriaName=' + selectedField)
+                .then( (res) => {
+                        console.log(res.data);
 
+                      queryObj.sponsor = res.data.CLIENT[0].name;
+                      queryObj.barcode = res.data.BARCODE[0].name;
+                      queryObj.location = res.data.LOCATION[0].name;
+                      queryObj.status = res.data.STATUS[0].name;
+                      queryObj.studyCode = res.data.STUDIES[0].name;
+                      this.notifyParent()
+                    },
+                    (error) => {console.log(error)});
+        }
     };
 
+    saveSearchedCriteria = (e)=> {
+        e.preventDefault();
+        let criteriaName = window.prompt('Enter Criteria Name');
+         let criteriaPayload= {
+             criteriaName: criteriaName,
+             criterialType: "BATCH",
+            node: {
+                CLIENT: [{
+                    "name": ""
+                }],
+                BARCODE: [{
+                    "name": ""
+                }],
+                LOCATION: [{
+                    "name": ""
+
+                }],
+                STUDIES: [{
+                    "name": ""
+                }],
+                STATUS: [{
+                    "name": ""
+                }]
+            }
+        };
+         if(queryObj.parentBarcode !== undefined) {
+             criteriaPayload.node.BARCODE[0].name = queryObj.parentBarcode;
+         } else {
+             delete criteriaPayload.node.BARCODE
+         }
+
+        if(!!queryObj.location && !!queryObj.location[0] ) {
+            criteriaPayload.node.LOCATION[0].name = queryObj.location[0];
+        } else {
+            delete criteriaPayload.node.LOCATION
+        }
+
+        if(!!queryObj.status && !!queryObj.status[0]) {
+            criteriaPayload.node.STATUS[0].name = queryObj.status[0];
+        } else {
+            delete criteriaPayload.node.STATUS
+        }
+        if(!!queryObj.studyCode && !!queryObj.studyCode[0]) {
+            criteriaPayload.node.STUDIES[0].name = queryObj.studyCode[0];
+        } else {
+            delete criteriaPayload.node.STUDIES
+        }
+        if(!!queryObj.sponsor && !!queryObj.sponsor[0]) {
+            criteriaPayload.node.CLIENT[0].name = queryObj.sponsor;
+        } else {
+            delete criteriaPayload.node.CLIENT
+        }
+        console.log(queryObj);
+        axios({method:'post',
+            url : 'http://localhost:8081/gclportal/api/workorder/addWorkOrderSearchCriteriaView',
+            data:criteriaPayload
+        })
+            .then( (res) => {
+                    console.log(res.data);
+                },
+                (error) => {console.log(error)});
+    };
     handleParentBarCode(event){
        this.notifyParent('parentBarcode', event.target.value)
     }
@@ -156,9 +255,16 @@ class SearchWorkOrder extends Component {
 
                             <LiveSearch liveSearchData={liveStatusSearchData} notifyParent={this.notifyParent} liveSearchDataTitle="Status" liveSearchDataResponse="status"/>
 
-                            <LiveSearch liveSearchData={liveSavedSearchData} notifyParent={this.notifyParent} liveSearchDataTitle="SAVE"/>
 
+                             <div className="col-xl-1">
+                                 <button className="default" onClick={this.saveSearchedCriteria}>Save</button>
+                             </div>
+
+                                 <LiveSearch liveSearchData={this.state.liveSavedSearchData} notifyParent={this.notifyParent} liveSearchDataTitle="Saved Searches"  liveSearchDataResponse="save"/>
+
+                             {/*</div>*/}
                         </div>
+
                     </form>
                 </div>
                 {/* <hr class="divider" text="react-native"/> */}
@@ -176,25 +282,11 @@ class SearchWorkOrder extends Component {
                             </Link>
                         </div>
                         <div className="col-sm-2">
-                            <Workbook filename="Search-Work-Order.xlsx" element={<button className="btn btn-primary" disabled={!this.state.statusFlag[1]}>Export</button>}>
-
-                                <Workbook.Sheet data={this.state.selectedExportRows} name="Sheet A">
-                                    <Workbook.Column label="Work Order Id" value="workOrderId"  />
-                                    <Workbook.Column label="Create Date"  value="createDate"/>
-                                    <Workbook.Column label="Status"  value="status"/>
-                                    <Workbook.Column label="Sponsor"  value="sponsor"/>
-                                    <Workbook.Column label="Total # of Parent Samples" value="parentSamples"/>
-                                    <Workbook.Column label="Created By"  value="createdBy"/>
-                                    <Workbook.Column label="Total # of Aliquot"  value="aliquot"/>
-                                </Workbook.Sheet>
-                            </Workbook>
+                            <button className="btn btn-primary" onClick={this.exportSelectedRows} disabled={!this.state.statusFlag[1]}><a href={exportUrl} target="_blank">Export</a>  </button>
                         </div>
                         <div className="col-sm-2">
                             <button className="btn btn-primary" disabled={!this.state.statusFlag[3]}>Create Aliquot</button>
                         </div>
-                        {/*<div className="col-sm-2">*/}
-                            {/*<button className="btn btn-primary" disabled={!this.state.statusFlag[4]}>Create Batch</button>*/}
-                        {/*</div>*/}
 
                     </div>
                 </div>
