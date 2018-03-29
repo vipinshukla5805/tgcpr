@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import './update.css';
 import Header from "../header/Header";
 import {BootstrapTable, TableHeaderColumn} from "react-bootstrap-table";
-import Alert from 'react-s-alert';
+// import Alert from 'react-s-alert';
 import 'react-s-alert/dist/s-alert-default.css';
 import 'react-s-alert/dist/s-alert-css-effects/scale.css';
 import axios from 'axios';
