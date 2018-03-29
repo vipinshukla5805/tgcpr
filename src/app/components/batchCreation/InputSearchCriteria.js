@@ -4,6 +4,11 @@ import LiveSearch from '../searchWorkOrder/LiveSearch';
 import Header from "../header/Header";
  import DateTimePicker from 'react-datetime-picker';
  import axios from 'axios';
+ import SponsorList from './SponsorList';
+import StudyList from "./StudyList";
+import TestList from "./TestList";
+import FreezerLocationList from "./FreezerLocationList";
+import VialLocationList from "./VialLocationList"
 
 const liveLocationSearchData = ["Mustard", "Ketchup", "Relish"];
 // const liveSavedSearchData = ["Save1", "Save2", "Save3", "Save4"];
@@ -11,8 +16,6 @@ const liveStatusSearchData = ["Created", "In Progress", "Completed", "Cancelled"
 const liveSponsorSearchData = ['a'];
 const liveStudySearchData = ['b'];
 
-let sponsorId;
-let studyId;
 
 
 class InputSearchCriteria extends Component {
@@ -20,112 +23,53 @@ class InputSearchCriteria extends Component {
         super(props);
         this.state = {
             date: new Date(),
-            liveSponsorSearchData: [],
-            sponsorList : [],
-            liveStudySearchData : [],
-            studyList : [],
-            liveTestSearchData : [],
-            testList : [],
-            liveVialLocationData : [],
-            vialLocation : [],
-            livefreezerLocationData : [],
-            freezerLocation:[]
+            sponsorId : '',
+            studyId : '',
+            testId : '',
+            vialId : '',
+            freezerLocationId : ''
         };
         this.notifyParent = this.notifyParent.bind(this);
+        this.getSelectedSponsorId = this.getSelectedSponsorId.bind(this);
+        this.getSelectedStudyId = this.getSelectedStudyId.bind(this);
+        this.getSelectedTestId = this.getSelectedTestId.bind(this);
+        this.getSelectedVialId = this.getSelectedVialId.bind(this);
+        this.getSelectedFreezerLocationId = this.getSelectedFreezerLocationId.bind(this);
     }
 
-    componentDidMount(){
-        axios.get('http://localhost:8081/gclportal/api/getallsponsors')
-            .then((res)=> {
-                console.log(res.data);
-                let sponsorList = [];
-                for(let i=0;i<res.data.length;i++) {
-                    sponsorList.push(res.data[i].name);
-                }
-                this.setState({
-                    liveSponsorSearchData : res.data,
-                    sponsorList
-                });
-            }, (err) => {
-                console.log(err);
-            });
-    }
-    notifyParent = function(name, selectedField){
+    getSelectedSponsorId = function(sponsorId) {
+        this.setState({
+            sponsorId
+        });
+    };
+
+    getSelectedStudyId = function(studyId) {
+        this.setState({
+            studyId
+        });
+    };
+
+    getSelectedTestId = function(testId) {
+        this.setState({
+            testId
+        });
+    };
+
+    getSelectedVialId = function(vialId) {
+        this.setState({
+            vialId
+        });
+    };
+
+    getSelectedFreezerLocationId = function(freezerLocationId) {
+        this.setState({
+            freezerLocationId
+        });
+    };
+
+    notifyParent = function(name, selectedField) {
         console.log(name,selectedField);
-        if(name==='sponsor') {
-            for(let i=0;i<this.state.liveSponsorSearchData.length;i++){
-                if(selectedField[0]===this.state.liveSponsorSearchData[i].name) {
-                    sponsorId = this.state.liveSponsorSearchData[i].id;
-                }
-            }
-            axios.get('http://localhost:8081/gclportal/api/studynumbers/'+ sponsorId)
-                .then((res)=> {
-                    console.log(res.data);
-                    let studyList = [];
-                    for(let i=0;i<res.data.length;i++) {
-                        studyList.push(res.data[i].name);
-                    }
-                    this.setState({
-                        liveStudySearchData : res.data,
-                        studyList
-                    });
-                }, (err) => {
-                    console.log(err);
-                });
-        }
-       if(name === 'study'){
-           for(let i=0;i<this.state.liveStudySearchData.length;i++){
-               if(selectedField[0]===this.state.liveStudySearchData[i].name) {
-                   studyId = this.state.liveStudySearchData[i].id;
-               }
-           }
 
-           axios.get('http://localhost:8081/gclportal/api/tests/'+ studyId)
-               .then((res)=> {
-                   console.log(res.data);
-                   let testList = [];
-                   for(let i=0;i<res.data.length;i++) {
-                       testList.push(res.data[i].name);
-                   }
-                   this.setState({
-                       liveTestSearchData : res.data,
-                       testList
-                   });
-               }, (err) => {
-                   console.log(err);
-               });
-       }
-
-      // if(name === 'test') {
-           axios.get('http://localhost:8081/gclportal/api/viallocation')
-               .then((res)=> {
-                   console.log(res.data);
-                   let vialLocation = [];
-                   for(let i=0;i<res.data.length;i++) {
-                       vialLocation.push(res.data[i].name);
-                   }
-                   this.setState({
-                       liveVialLocationData : res.data,
-                       vialLocation
-                   });
-               }, (err) => {
-                   console.log(err);
-               });
-       //}
-        axios.get('http://localhost:8081/gclportal/api/freezerlocation')
-            .then((res)=> {
-                console.log(res.data);
-                let freezerLocation = [];
-                for(let i=0;i<res.data.length;i++) {
-                    freezerLocation.push(res.data[i].name);
-                }
-                this.setState({
-                    livefreezerLocationData : res.data,
-                    freezerLocation
-                });
-            }, (err) => {
-                console.log(err);
-            });
     };
     onChange = date => this.setState({date})
 
@@ -133,35 +77,18 @@ class InputSearchCriteria extends Component {
 
         return (
             <div>
+
                 <Header headerTitle="Batch Creation - Input Search Criteria"/>
                 <div className="container">
+
                     <div className="row">
                         <div className='col-md-6'>
-                            <div className="form-inline">
-                                <label className="col-sm-4 col-form-label" style={styles.label}>Sponsor</label>
-                                <div className="col-sm-5">
-                                    <LiveSearch
-                                        liveSearchData={this.state.sponsorList}
-                                        notifyParent={this.notifyParent} liveSearchDataResponse="sponsor"/>
-                                </div>
-                            </div>
+                            <SponsorList getSelectedSponsorId={this.getSelectedSponsorId}/>
 
-                            <div className="form-inline">
-                                <label className="col-sm-4 col-form-label" style={styles.label}>Studies</label>
-                                <div className="col-sm-5">
-                                    <LiveSearch
-                                        liveSearchData={this.state.studyList}
-                                        notifyParent={this.notifyParent} liveSearchDataResponse="study"/>
-                                </div>
-                            </div>
-                            <div className="form-inline">
-                                <label className="col-sm-4 col-form-label" style={styles.label}>Test</label>
-                                <div className="col-sm-5">
-                                    <LiveSearch
-                                        liveSearchData={this.state.testList}
-                                        notifyParent={this.notifyParent}  liveSearchDataResponse="test"/>
-                                </div>
-                            </div>
+                            <StudyList getSelectedStudyId={this.getSelectedStudyId} sponsorId={this.state.sponsorId}/>
+
+                            <TestList getSelectedTestId={this.getSelectedTestId} studyId={this.state.studyId}/>
+
 
                             <div className="form-inline">
                                  <label className="col-sm-4 col-form-label" style={styles.label}>Pre-Dul. of Tilter Test</label>
@@ -232,24 +159,10 @@ class InputSearchCriteria extends Component {
                                         notifyParent={this.notifyParent}/>
                                 </div>
                             </div>
-                            <div className="form-inline">
-                                <label className="col-sm-4 col-form-label" style={styles.label}>Vial Location</label>
-                                <div className="col-sm-5">
-                                    <LiveSearch
-                                        liveSearchData={this.state.vialLocation}
-                                        notifyParent={this.notifyParent}
-                                        liveSearchDataResponse="vial"/>
-                                </div>
-                            </div>
-                            <div className="form-inline">
-                                <label className="col-sm-4 col-form-label" style={styles.label}>Freezer Location</label>
-                                <div className="col-sm-5">
-                                    <LiveSearch
-                                        liveSearchData={this.state.freezerLocation}
-                                        notifyParent={this.notifyParent}
-                                        liveSearchDataResponse="freezer"/>
-                                </div>
-                            </div>
+
+                            <VialLocationList getSelectedVialId={this.getSelectedVialId} testId={this.state.testId}/>
+
+                            <FreezerLocationList getSelectedVialId={this.getSelectedFreezerLocationId} testId={this.state.freezerLocationId}/>
                             <div className="form-inline">
                                 <label className="col-sm-4 col-form-label" style={styles.label}>Freezer</label>
                                 <div className="col-sm-5">
