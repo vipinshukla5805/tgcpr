@@ -14,8 +14,8 @@ class StudyList extends Component {
 
     notifyParent = function(name, selectedField){
         for(let i=0;i<this.state.liveStudySearchData.length;i++){
-            if(selectedField[0]===this.state.liveSponsorSearchData[i].name) {
-                studyId = this.state.liveSponsorSearchData[i].id;
+            if(selectedField[0]===this.state.liveStudySearchData[i].name) {
+                studyId = this.state.liveStudySearchData[i].id;
             }
         }
         this.props.getSelectedStudyId(studyId);

@@ -276,16 +276,16 @@ class SearchWorkOrder extends Component {
                     <div className="row justify-content-md-center">
                         <div className="col-sm-2">
                             <Link to={'/updateWorkOrder/' + selectedRow[selectedRow.length-1].workOrderId + '/' + selectedRow[selectedRow.length-1].status} >
-                                <button className="btn btn-primary" disabled={!this.state.statusFlag[0]}>
+                                <button id="update-button" className="btn btn-primary" disabled={!this.state.statusFlag[0]}>
                                 Update
                                 </button>
                             </Link>
                         </div>
                         <div className="col-sm-2">
-                            <button className="btn btn-primary" onClick={this.exportSelectedRows} disabled={!this.state.statusFlag[1]}><a href={exportUrl} target="_blank">Export</a>  </button>
+                            <button id="update-button" className="btn btn-primary" onClick={this.exportSelectedRows} disabled={!this.state.statusFlag[1]}><a href={exportUrl} target="_blank">Export</a>  </button>
                         </div>
                         <div className="col-sm-2">
-                            <button className="btn btn-primary" disabled={!this.state.statusFlag[3]}>Create Aliquot</button>
+                            <button id="update-button"className="btn btn-primary" disabled={!this.state.statusFlag[3]}>Create Aliquot</button>
                         </div>
 
                     </div>

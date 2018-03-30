@@ -38,11 +38,11 @@
 }
 
 
-.btn-primary:enabled {
+#update-button.btn-primary:enabled {
     background-color: #0000ffb0;
 }
 
-.btn-primary:disabled {
+#update-button.btn-primary:disabled {
     background-color: lightgray;
     cursor: none;
 }

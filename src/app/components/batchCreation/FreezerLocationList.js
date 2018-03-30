@@ -21,7 +21,7 @@ class FreezerLocationList extends Component {
         this.props.getSelectedFreezerLocationId(freezerLocationId);
     };
     componentWillReceiveProps(newProps) {
-        if(!!newProps.testId) {
+      //  if(!!newProps.testId) {
             axios.get('http://localhost:8081/gclportal/api/freezerlocation')
                 .then((res)=> {
                     console.log(res.data);
@@ -36,7 +36,7 @@ class FreezerLocationList extends Component {
                 }, (err) => {
                     console.log(err);
                 });
-        }
+      //  }
     }
 
     render() {
@@ -47,7 +47,7 @@ class FreezerLocationList extends Component {
                     <LiveSearch
                         liveSearchData={this.state.freezerLocation}
                         notifyParent={this.notifyParent}
-                        liveSearchDataResponse="freezer"/>
+                        liveSearchDataResponse="freezerLocation"/>
                 </div>
             </div>
         )

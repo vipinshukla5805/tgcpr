@@ -1,56 +1,57 @@
 import React, {Component} from 'react';
 import LiveSearch from "../searchWorkOrder/LiveSearch";
 import axios from 'axios';
-let vialLocationId;
-class VialLocationList extends Component {
+let freezerId;
+class FreezerList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            liveVialLocationData : [],
-            vialLocation : []
+            livefreezerData: [],
+            freezer: []
         };
         this.notifyParent = this.notifyParent.bind(this);
     }
 
-    notifyParent = function(name, selectedField){
-        for(let i=0;i<this.state.liveVialLocationData.length;i++){
-            if(selectedField[0]===this.state.liveVialLocationData[i].name) {
-                vialLocationId = this.state.liveVialLocationData[i].id;
+    notifyParent = function (name, selectedField) {
+        for (let i = 0; i < this.state.livefreezerData.length; i++) {
+            if (selectedField[0] === this.state.livefreezerData[i].name) {
+                freezerId = this.state.livefreezerData[i].id;
             }
         }
-        this.props.getSelectedVialId(vialLocationId);
+        this.props.getSelectedFreezerId(freezerId);
     };
+
     componentWillReceiveProps(newProps) {
-      //  if(!!newProps.testId) {
-            axios.get('http://localhost:8081/gclportal/api/viallocation')
-                .then((res)=> {
+        if (!!newProps.freezerLocationId) {
+            axios.get('http://localhost:8081/gclportal/api/freezers/' + newProps.freezerLocationId)
+                .then((res) => {
                     console.log(res.data);
-                    let vialLocation = [];
-                    for(let i=0;i<res.data.length;i++) {
-                        vialLocation.push(res.data[i].name);
+                    let freezer = [];
+                    for (let i = 0; i < res.data.length; i++) {
+                        freezer.push(res.data[i].name);
                     }
                     this.setState({
-                        liveVialLocationData : res.data,
-                        vialLocation
+                        livefreezerData: res.data,
+                        freezer
                     });
                 }, (err) => {
                     console.log(err);
                 });
-     //   }
+        }
     }
 
     render() {
         return (
             <div className="form-inline">
-                <label className="col-sm-4 col-form-label" style={styles.label}>Vial Location</label>
+                <label className="col-sm-4 col-form-label" style={styles.label}>Freezer</label>
                 <div className="col-sm-5">
                     <LiveSearch
-                        liveSearchData={this.state.vialLocation}
+                        liveSearchData={this.state.freezer}
                         notifyParent={this.notifyParent}
-                        liveSearchDataResponse="vial"/>
+                        liveSearchDataResponse="freezer"/>
                 </div>
             </div>
-        )
+        );
     }
 }
 
@@ -74,4 +75,4 @@ const styles = ({
         marginTop: '25px'
     }
 });
-export default VialLocationList;
+export default FreezerList;

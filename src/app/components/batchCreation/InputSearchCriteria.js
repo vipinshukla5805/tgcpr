@@ -3,18 +3,26 @@ import './InputSearchCriteria.css';
 import LiveSearch from '../searchWorkOrder/LiveSearch';
 import Header from "../header/Header";
  import DateTimePicker from 'react-datetime-picker';
- import axios from 'axios';
+ // import axios from 'axios';
  import SponsorList from './SponsorList';
 import StudyList from "./StudyList";
 import TestList from "./TestList";
+import SampleTypeList from "./SampleTypeList";
 import FreezerLocationList from "./FreezerLocationList";
+import FreezerList from "./FreezerList";
 import VialLocationList from "./VialLocationList"
+import FreezerShelfList from "./FreezerShelfList";
+import FreezerRackList from "./FreezerRackList";
+import FreezerBoxList from "./FreezerBoxList";
+import VisitList from "./VisitList";
+
+
 
 const liveLocationSearchData = ["Mustard", "Ketchup", "Relish"];
 // const liveSavedSearchData = ["Save1", "Save2", "Save3", "Save4"];
-const liveStatusSearchData = ["Created", "In Progress", "Completed", "Cancelled"];
+const liveStatusSearchData = ["ml", "ul", "g", "mg", "ug","ng"];
 const liveSponsorSearchData = ['a'];
-const liveStudySearchData = ['b'];
+// const liveStudySearchData = ['b'];
 
 
 
@@ -27,14 +35,26 @@ class InputSearchCriteria extends Component {
             studyId : '',
             testId : '',
             vialId : '',
-            freezerLocationId : ''
+            SampleTypeId:'',
+            visitId:'',
+            freezerLocationId : '',
+            freezerId: '',
+            freezerShelfId: '',
+            freezerRackId:'',
+            freezerBoxId: ''
         };
         this.notifyParent = this.notifyParent.bind(this);
         this.getSelectedSponsorId = this.getSelectedSponsorId.bind(this);
         this.getSelectedStudyId = this.getSelectedStudyId.bind(this);
         this.getSelectedTestId = this.getSelectedTestId.bind(this);
         this.getSelectedVialId = this.getSelectedVialId.bind(this);
+        this.getSelectedSampleTypeId = this.getSelectedSampleTypeId.bind(this);
+        this.getSelectedVisitId = this.getSelectedVisitId.bind(this);
         this.getSelectedFreezerLocationId = this.getSelectedFreezerLocationId.bind(this);
+        this.getSelectedFreezerId = this.getSelectedFreezerId.bind(this);
+        this.getSelectedFreezerShelfId = this.getSelectedFreezerShelfId.bind(this);
+        this.getSelectedFreezerRackId = this.getSelectedFreezerRackId.bind(this);
+        this.getSelectedFreezerBoxId = this.getSelectedFreezerBoxId.bind(this);
     }
 
     getSelectedSponsorId = function(sponsorId) {
@@ -61,9 +81,45 @@ class InputSearchCriteria extends Component {
         });
     };
 
+    getSelectedSampleTypeId = function( SampleType) {
+        this.setState({
+            SampleType
+        });
+    };
+
+    getSelectedVisitId = function( visitId) {
+        this.setState({
+            visitId
+        });
+    };
+
     getSelectedFreezerLocationId = function(freezerLocationId) {
         this.setState({
             freezerLocationId
+        });
+    };
+
+    getSelectedFreezerId = function(freezerId) {
+        this.setState({
+            freezerId
+        });
+    };
+
+    getSelectedFreezerShelfId = function(freezerShelfId) {
+        this.setState({
+            freezerShelfId
+        });
+    };
+
+    getSelectedFreezerRackId = function(freezerRackId) {
+        this.setState({
+            freezerRackId
+        });
+    };
+
+    getSelectedFreezerBoxId = function(freezerBoxId) {
+        this.setState({
+            freezerBoxId
         });
     };
 
@@ -102,21 +158,16 @@ class InputSearchCriteria extends Component {
                             <div className="form-inline">
                                 <label className="col-sm-4 col-form-label" style={styles.label}>volume|uom</label>
                                 <div className="col-xl1">
+                                    <input type="text" style={styles.text} className="form-control" aria-label="Small" id="usr"/>
                                     <LiveSearch
                                         liveSearchData={liveStatusSearchData}
                                         notifyParent={this.notifyParent}/>
-                                    <input type="text" style={styles.text} className="form-control" aria-label="Small" id="usr"/>
                                 </div>
                             </div>
 
-                            <div className="form-inline">
-                                <label className="col-sm-4 col-form-label" style={styles.label}>Visit</label>
-                                <div className="col-sm-5">
-                                    <LiveSearch
-                                        liveSearchData={liveSponsorSearchData}
-                                        notifyParent={this.notifyParent}/>
-                                </div>
-                            </div>
+                            <VisitList getSelectedVisitId={this.getSelectedVisitId} studyId={this.state.studyId}/>
+
+
 
                             <div className="form-inline">
                                 <label className="col-sm-4 col-form-label" style={styles.label}>Site</label>
@@ -151,50 +202,21 @@ class InputSearchCriteria extends Component {
                                         notifyParent={this.notifyParent}/>
                                 </div>
                             </div>
-                            <div className="form-inline">
-                                <label className="col-sm-4 col-form-label" style={styles.label}>Sample Type</label>
-                                <div className="col-sm-5">
-                                    <LiveSearch
-                                        liveSearchData={liveSponsorSearchData}
-                                        notifyParent={this.notifyParent}/>
-                                </div>
-                            </div>
+
+                            <SampleTypeList getSelectedSampleTypeId={this.getSelectedSampleTypeId} testId={this.state.testId}/>
 
                             <VialLocationList getSelectedVialId={this.getSelectedVialId} testId={this.state.testId}/>
 
-                            <FreezerLocationList getSelectedVialId={this.getSelectedFreezerLocationId} testId={this.state.freezerLocationId}/>
-                            <div className="form-inline">
-                                <label className="col-sm-4 col-form-label" style={styles.label}>Freezer</label>
-                                <div className="col-sm-5">
-                                    <LiveSearch
-                                        liveSearchData={liveSponsorSearchData}
-                                        notifyParent={this.notifyParent}/>
-                                </div>
-                            </div>
-                            <div className="form-inline">
-                                <label className="col-sm-4 col-form-label" style={styles.label}>Freezer Shelf</label>
-                                <div className="col-sm-5">
-                                    <LiveSearch
-                                        liveSearchData={liveSponsorSearchData}
-                                        notifyParent={this.notifyParent}/>
-                                </div>
-                            </div>
-                            <div className="form-inline">
-                                <label className="col-sm-4 col-form-label" style={styles.label}>Freezer Rack</label>
-                                <div className="col-sm-5">
-                                    <LiveSearch
-                                        liveSearchData={liveSponsorSearchData}
-                                        notifyParent={this.notifyParent}/>
-                                </div>
-                            </div>
-                            <div className="form-inline">
-                                <label className="col-sm-4 col-form-label" style={styles.label}>Freezer Box</label>
-                                <div className="col-sm-5">
-                                    <LiveSearch
-                                        liveSearchData={liveLocationSearchData}
-                                        notifyParent={this.notifyParent}/>
-                                </div>
-                            </div>
+                            <FreezerLocationList getSelectedFreezerLocationId={this.getSelectedFreezerLocationId} testId={this.state.testId}/>
+
+                            <FreezerList getSelectedFreezerId={this.getSelectedFreezerId} freezerLocationId={this.state.freezerLocationId}/>
+
+                            <FreezerShelfList getSelectedFreezerShelfId={this.getSelectedFreezerShelfId} freezerId={this.state.freezerId}/>
+
+                            <FreezerRackList getSelectedFreezerRackId={this.getSelectedFreezerRackId} freezerShelfId={this.state.freezerShelfId}/>
+
+                            <FreezerBoxList getSelectedFreezerBoxId={this.getSelectedFreezerBoxId} freezerRackId={this.state.freezerRackId}/>
+
 
                         </div>
 
@@ -349,8 +371,9 @@ const styles = ({
 
     },
     text: {
-        width:"30%",
-        height:"31px"
+        width: '48%',
+        height: '31px',
+        marginLeft:'29px'
     },
     col: {
         textAlign: 'start'

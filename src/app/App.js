@@ -6,6 +6,7 @@ import { Switch, Route } from "react-router-dom";
 import SearchWorkOrder from "./components/searchWorkOrder/SearchWorkOrder";
 import InputSearchCriteria from "./components/batchCreation/InputSearchCriteria";
 import UpdateWorkOrder from "./components/updateWorkOrder/UpdateWorkOrder";
+import BatchSearchResults from "./components/batchCreation/batchSearchResults/BatchSearchResults";
 class App extends Component {
   render() {
     return (
@@ -16,6 +17,7 @@ class App extends Component {
           <Route path="/searchWorkOrder" component={SearchWorkOrder} />
           <Route path="/updateWorkOrder/:workOrderId/:status" component={UpdateWorkOrder} />
             <Route path="/batchCreation" component={InputSearchCriteria} />
+            <Route path="/batchSearchResults" component={BatchSearchResults} />
         </Switch>
       </div>
     );

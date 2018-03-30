@@ -6,11 +6,7 @@
    
 }
 
-.panel-body {
-    margin-left: 450px;
-}
-
-.btn-block{
+#homepage.btn-block{
 background-color: #8f316e63;
 margin-bottom: 25px;
 font-weight: bold;

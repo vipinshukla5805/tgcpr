@@ -12,15 +12,18 @@ class HomePage extends Component {
         <div className="panel">
           <div className="col-md-4 main-body">
 
-            <Link className="btn btn-block list-group-item" to="/createWorkOrder">
+            <Link id='homepage' className="btn btn-block list-group-item" to="/createWorkOrder">
               Create Work Order
             </Link>
-            <Link className="btn btn-block list-group-item" to="/searchWorkOrder">
+            <Link id='homepage' className="btn btn-block list-group-item" to="/searchWorkOrder">
               Search Work Order
             </Link>
-            <Link className="btn btn-block list-group-item" to="/batchCreation">
+            <Link id='homepage' className="btn btn-block list-group-item" to="/batchCreation">
               Batch Creation
             </Link>
+              <Link id='homepage'className="btn btn-block list-group-item" to="/batchSearchResults">
+                  Batch Search Results
+              </Link>
 
           </div>
         </div>

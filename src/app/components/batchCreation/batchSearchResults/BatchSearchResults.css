@@ -1,0 +1,52 @@
+.main-container {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    background-color: #800080c4;
+    color: white;
+    width: 100%;
+}
+.batch-search-row {
+    width: 100%;
+}
+
+.panel-header{
+    height: 310px;
+    border: 1px solid black;
+    margin-left: 5%;
+}
+
+.panel1{
+    width: 91%;
+    height: 310px;
+    border: 1px solid black;
+    margin-left: 5px;
+}
+
+.Panel2{
+    text-align: left;
+    padding-top: 20px;
+    padding-left: 20px;
+}
+
+/*.table-bordered{*/
+    /*width: 690px;*/
+/*}*/
+.batch-search-table {
+    width: 97%;
+}
+.button-size{
+    margin-top: 20px;
+    margin-bottom: 20px;
+    background-color:#4f4d4e85;
+    border:  #0000ff73;
+}
+
+#export-list.btn-primary:enabled {
+    background-color: #0000ffb0;
+}
+
+#export-list.btn-primary:disabled {
+    background-color: lightgray;
+    cursor: none;
+}
+
