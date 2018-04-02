@@ -2,7 +2,9 @@ import React, {Component} from 'react';
 import './InputSearchCriteria.css';
 import LiveSearch from '../searchWorkOrder/LiveSearch';
 import Header from "../header/Header";
- import DateTimePicker from 'react-datetime-picker';
+import DatePicker from 'react-datepicker';
+import moment from 'moment';
+import 'react-datepicker/dist/react-datepicker.css';
  // import axios from 'axios';
  import SponsorList from './SponsorList';
 import StudyList from "./StudyList";
@@ -15,8 +17,12 @@ import FreezerShelfList from "./FreezerShelfList";
 import FreezerRackList from "./FreezerRackList";
 import FreezerBoxList from "./FreezerBoxList";
 import VisitList from "./VisitList";
-
-
+import SiteList from "./SiteList";
+import ScreenIDList from "./ScreenIDList";
+import RandIDList from "./RandIDList";
+import PatientAccessionList from "./PatientAccessionList";
+import {Link} from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 
 const liveLocationSearchData = ["Mustard", "Ketchup", "Relish"];
 // const liveSavedSearchData = ["Save1", "Save2", "Save3", "Save4"];
@@ -30,7 +36,7 @@ class InputSearchCriteria extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            date: new Date(),
+            startDate: moment(),
             sponsorId : '',
             studyId : '',
             testId : '',
@@ -41,7 +47,11 @@ class InputSearchCriteria extends Component {
             freezerId: '',
             freezerShelfId: '',
             freezerRackId:'',
-            freezerBoxId: ''
+            freezerBoxId: '',
+            siteId:'',
+            screenId:'',
+            randId:'',
+            patientId:''
         };
         this.notifyParent = this.notifyParent.bind(this);
         this.getSelectedSponsorId = this.getSelectedSponsorId.bind(this);
@@ -50,11 +60,22 @@ class InputSearchCriteria extends Component {
         this.getSelectedVialId = this.getSelectedVialId.bind(this);
         this.getSelectedSampleTypeId = this.getSelectedSampleTypeId.bind(this);
         this.getSelectedVisitId = this.getSelectedVisitId.bind(this);
+        this.getSelectedSiteId = this.getSelectedSiteId.bind(this);
+        this.getSelectedScreenID_Id = this.getSelectedScreenID_Id.bind(this);
+        this.getSelectedRandID_Id = this.getSelectedRandID_Id.bind(this);
+        this.getSelectedPatientAccessionId = this.getSelectedPatientAccessionId.bind(this);
         this.getSelectedFreezerLocationId = this.getSelectedFreezerLocationId.bind(this);
         this.getSelectedFreezerId = this.getSelectedFreezerId.bind(this);
         this.getSelectedFreezerShelfId = this.getSelectedFreezerShelfId.bind(this);
         this.getSelectedFreezerRackId = this.getSelectedFreezerRackId.bind(this);
         this.getSelectedFreezerBoxId = this.getSelectedFreezerBoxId.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    handleChange(date) {
+        this.setState({
+            startDate: date
+        });
     }
 
     getSelectedSponsorId = function(sponsorId) {
@@ -79,6 +100,10 @@ class InputSearchCriteria extends Component {
         this.setState({
             vialId
         });
+        this.props.router.push({
+            pathName :'/batchSearchResults',
+            state : this.state.vialId
+        })
     };
 
     getSelectedSampleTypeId = function( SampleType) {
@@ -90,6 +115,30 @@ class InputSearchCriteria extends Component {
     getSelectedVisitId = function( visitId) {
         this.setState({
             visitId
+        });
+    };
+
+    getSelectedSiteId = function( siteId) {
+        this.setState({
+            siteId
+        });
+    };
+
+    getSelectedScreenID_Id = function( screenId) {
+        this.setState({
+            screenId
+        });
+    };
+
+    getSelectedRandID_Id = function( randId) {
+        this.setState({
+            randId
+        });
+    };
+
+    getSelectedPatientAccessionId = function( patientId) {
+        this.setState ({
+            patientId
         });
     };
 
@@ -127,15 +176,18 @@ class InputSearchCriteria extends Component {
         console.log(name,selectedField);
 
     };
-    onChange = date => this.setState({date})
+    // onChange = date => this.setState({date})
 
     render() {
 
         return (
             <div>
+                <Switch>
+                    <Route path="/batchSearchResults" component={BatchSearchResults} />
+                </Switch>
 
                 <Header headerTitle="Batch Creation - Input Search Criteria"/>
-                <div className="container">
+                <div className="container input-search-container">
 
                     <div className="row">
                         <div className='col-md-6'>
@@ -167,41 +219,13 @@ class InputSearchCriteria extends Component {
 
                             <VisitList getSelectedVisitId={this.getSelectedVisitId} studyId={this.state.studyId}/>
 
+                            <SiteList getSelectedSiteId={this.getSelectedSiteId} visitId={this.state.visitId}/>
 
+                            <ScreenIDList getSelectedScreenID_Id={this.getSelectedScreenID_Id} siteId={this.state.siteId}/>
 
-                            <div className="form-inline">
-                                <label className="col-sm-4 col-form-label" style={styles.label}>Site</label>
-                                <div className="col-sm-5">
-                                    <LiveSearch
-                                        liveSearchData={liveSponsorSearchData}
-                                        notifyParent={this.notifyParent}/>
-                                </div>
-                            </div>
+                            <RandIDList getSelectedRandID_Id={this.getSelectedRandID_Id} screenId={this.state.screenId}/>
 
-                            <div className="form-inline">
-                                <label className="col-sm-4 col-form-label" style={styles.label}>ScreenID</label>
-                                <div className="col-sm-5">
-                                    <LiveSearch
-                                        liveSearchData={liveSponsorSearchData}
-                                        notifyParent={this.notifyParent}/>
-                                </div>
-                            </div>
-                            <div className="form-inline">
-                                <label className="col-sm-4 col-form-label" style={styles.label}>RandID</label>
-                                <div className="col-sm-5">
-                                    <LiveSearch
-                                        liveSearchData={liveSponsorSearchData}
-                                        notifyParent={this.notifyParent}/>
-                                </div>
-                            </div>
-                            <div className="form-inline">
-                                <label className="col-sm-4 col-form-label" style={styles.label}>Patient Accession</label>
-                                <div className="col-sm-5">
-                                    <LiveSearch
-                                        liveSearchData={liveSponsorSearchData}
-                                        notifyParent={this.notifyParent}/>
-                                </div>
-                            </div>
+                            <PatientAccessionList getSelectedPatientAccessionId={this.getSelectedPatientAccessionId} randId={this.state.randId}/>
 
                             <SampleTypeList getSelectedSampleTypeId={this.getSelectedSampleTypeId} testId={this.state.testId}/>
 
@@ -222,60 +246,73 @@ class InputSearchCriteria extends Component {
 
                         <div className='col-md-6'>
 
-                            <div className="row">
-                                <div className="col-md-3" style={styles.col}>
-                                    <label >Draw Date
-                                    </label>
+                            <div className="row" style={styles.rowTop}>
+                                <div className="col-md-4" style={styles.col}>
+                                    <label >Draw Date</label>
                                 </div>
                                 <div className="col-md" style={styles.col}>
-                                    <div>
-                                        <label className="col-sm-2 col-form-label">From:
-                                        </label>
-                                        <DateTimePicker onChange={this.onChange} value={this.state.date}/>
+                                    <div className="date-style">
+                                        <label className="col-sm-3 col-form-label">From:</label>
+                                        <DatePicker
+                                            placeholderText="mm/dd/yyyy"
+                                            // selected={this.state.startDate}
+                                            onChange={this.handleChange}
+                                        />
                                     </div>
-                                    <div>
-                                        <label className="col-sm-2 col-form-label">To:
+                                    <div className="date-style">
+                                        <label className="col-sm-3 col-form-label">To:
                                         </label>
-                                        <DateTimePicker/>
+                                        <DatePicker
+                                            placeholderText="mm/dd/yyyy"
+                                            // selected={this.state.startDate}
+                                            onChange={this.handleChange}
+                                        />
                                     </div>
                                 </div>
                             </div>
 
                             <div className="row" style={styles.rowTop}>
-                                <div className="col-md-3" style={styles.col}>
-                                    <label >Recieved Date
-                                    </label>
+                                <div className="col-md-4" style={styles.col}>
+                                    <label >Recieved Date</label>
                                 </div>
                                 <div className="col-md" style={styles.col}>
-                                    <div>
-                                        <label className="col-sm-2 col-form-label">From:
+                                    <div className="date-style">
+                                        <label className="col-sm-3 col-form-label">From:
                                         </label>
-                                        <DateTimePicker onChange={this.onChange} value={this.state.date}/>
+                                        <DatePicker
+                                            placeholderText="mm/dd/yyyy"
+                                            // selected={this.state.startDate}
+                                            onChange={this.handleChange}
+                                        />
                                     </div>
-                                    <div>
-                                        <label className="col-sm-2 col-form-label">To:
-                                        </label>
-                                        <DateTimePicker/>
+                                    <div className="date-style">
+                                        <label className="col-sm-3 col-form-label">To:</label>
+                                        <DatePicker
+                                            placeholderText="mm/dd/yyyy"
+                                            // selected={this.state.startDate}
+                                            onChange={this.handleChange}
+                                        />
                                     </div>
                                 </div>
                             </div>
 
                             <div className="row" style={styles.rowTop}>
-                                <div className="col-md-3" style={styles.col}>
-                                    <label >Recieved Date
+                                <div className="col-md-5" style={styles.col}>
+                                    <label >Sequence Number
                                     </label>
                                 </div>
-
-                                <div className="col-md" style={styles.col}>
+                                <div className="col-md" style={styles.sequenceNo}>
                                     <div>
-                                        <label className="col-sm-2 col-form-label">From:
-                                        </label>
-                                        <DateTimePicker onChange={this.onChange} value={this.state.date}/>
+                                        <div className="col-md seq-no" >
+                                        <label >From:</label>
+                                        <input type="text" style={styles.sequenceText} className="form-control" aria-label="Small"/>
+                                        </div>
                                     </div>
                                     <div>
-                                        <label className="col-sm-2 col-form-label">To:
-                                        </label>
-                                        <DateTimePicker/>
+                                        <div className="col-md seq-no" >
+                                        <label >To:</label>
+                                        <input type="text" style={styles.sequenceText} className="form-control" aria-label="Small" />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -294,14 +331,14 @@ class InputSearchCriteria extends Component {
                                 <div className="col-md-5" style={styles.col}>
                                     <label>Paste Box Barcodes</label>
                                 </div>
-                                <input className="textBox" type="text"/>
+                                <textarea class="form-control Paste-text-area"  rows="3"></textarea>
                             </div>
 
                             <div className="row" style={styles.rowTop}>
                                 <div className="col-md-5" style={styles.col}>
                                     <label>Paste Parent Barcodes</label>
                                 </div>
-                                <input className="textBox" type="text"/>
+                                <textarea class="form-control Paste-text-area"  rows="3"></textarea>
                             </div>
 
                             <div className="row" style={styles.rowTop}>
@@ -331,26 +368,37 @@ class InputSearchCriteria extends Component {
                                 <label className="form-check-label">Only items with HI in last days</label>
                             </div>
 
-                            <div className="row" style={styles.rowTop}>
-                                <div className="col-md-5" style={styles.col}>
-                                    <label>Parent Barcode</label>
-                                </div>
-                                <div className="form-inline">
+                            <div className="form-inline" style={styles.rowTop1}>
+                                <label className="col-sm-5 col-form-label" style={styles.label}>My Saved Searches</label>
+                                <div className="col-sm-5">
                                     <LiveSearch
-                                        liveSearchData={liveLocationSearchData}
-                                        notifyParent={this.notifyParent}/>
+                                        notifyParent={this.notifyParent}
+                                        liveSearchData={liveLocationSearchData}/>
                                 </div>
                             </div>
+                            <div className="row" style={styles.SaveField}>
+                                <div className="col-md-5"></div>
+                                    <div className="form-check">
+                                        <input type="checkbox" className="form-check-input" id="exampleCheck1"></input>
+                                    </div>
+                                <label className="form-check-label">Show other user's searches</label>
+                            </div>
+
+
 
                             <div className="row" style={styles.button}>
                                 <div className="col-sm-2">
-                                    <button className="btn btn-primary">Reset</button>
+                                    <button id='reset-button'className="btn btn-primary">Reset</button>
                                 </div>
                                 <div className="col-sm-2">
-                                    <button className="btn btn-secondary">Find</button>
+                                    <button id='find-button' className="btn btn-success">
+                                        <Link to='/batchSearchResults' state={this.state.vialId}>Find</Link>
+                                    </button>
+
+
                                 </div>
                                 <div className="col-sm-2">
-                                    <button className="btn btn-success">Save</button>
+                                    <button id='save-button'className="btn btn-success ">Save</button>
                                 </div>
                             </div>
 
@@ -368,7 +416,22 @@ const styles = ({
     },
     rowTop: {
         marginTop: '20px'
-
+    },
+    rowTop1: {
+        marginTop: '20px',
+        marginLeft:'-12px'
+    },
+    SaveField:{
+        marginTop:'5px',
+        paddingLeft:'45px'
+    },
+    sequenceText:{
+        width:'50%',
+        height: '30px'
+    },
+    sequenceNo :{
+        display:'flex',
+        marginLeft:'-44px'
     },
     text: {
         width: '48%',
@@ -380,8 +443,9 @@ const styles = ({
     },
     button: {
         justifyContent: 'flex-end',
-        marginTop: '25px'
+        marginTop: '45px'
     }
+
 });
 
 export default InputSearchCriteria;

@@ -1,40 +1,40 @@
 import React, {Component} from 'react';
 import LiveSearch from "../searchWorkOrder/LiveSearch";
 import axios from 'axios';
-let visitId;
-class VisitList extends Component {
+let randId;
+class RandIDList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            liveVisitData: [],
-            Visit: []
+            liveRandIDData: [],
+            RandID: []
         };
         this.notifyParent = this.notifyParent.bind(this);
     }
 
     notifyParent = function (name, selectedField) {
-        for (let i = 0; i < this.state.liveVisitData.length; i++) {
-            if (selectedField[0] === this.state.liveVisitData[i].name) {
-                visitId = this.state.liveVisitData[i].id;
+        for (let i = 0; i < this.state.liveRandIDData.length; i++) {
+            if (selectedField[0] === this.state.liveRandIDData[i].name) {
+                randId = this.state.liveRandIDData[i].id;
             }
         }
-        this.props.getSelectedVisitId(visitId);
+        this.props.getSelectedRandID_Id(randId);
     };
 
     componentWillReceiveProps(newProps) {
-        if (!!newProps.studyId) {
-            axios.post('http://localhost:8081/gclportal/api/visits',
-                [newProps.studyId]
+        if (!!newProps.screenId) {
+            axios.post('http://localhost:8081/gclportal/api/randIDs',
+                [newProps.screenId]
             )
                 .then((res) => {
                     console.log(res.data);
-                    let Visit = [];
+                    let RandID = [];
                     for (let i = 0; i < res.data.length; i++) {
-                        Visit.push(res.data[i].name);
+                        RandID.push(res.data[i].name);
                     }
                     this.setState({
-                        liveVisitData: res.data,
-                        Visit
+                        liveRandIDData: res.data,
+                        RandID
                     });
                 }, (err) => {
                     console.log(err);
@@ -45,12 +45,12 @@ class VisitList extends Component {
     render() {
         return (
             <div className="form-inline">
-                <label className="col-sm-4 col-form-label" style={styles.label}>Visit</label>
+                <label className="col-sm-4 col-form-label" style={styles.label}>RandID</label>
                 <div className="col-sm-5">
                     <LiveSearch
-                        liveSearchData={this.state.Visit}
+                        liveSearchData={this.state.RandID}
                         notifyParent={this.notifyParent}
-                        liveSearchDataResponse="Visit"/>
+                        liveSearchDataResponse="RandID"/>
                 </div>
             </div>
         );
@@ -77,4 +77,4 @@ const styles = ({
         marginTop: '25px'
     }
 });
-export default VisitList;
+export default RandIDList;

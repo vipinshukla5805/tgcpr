@@ -10,14 +10,25 @@
     padding-top: 10px;
 }
 
-.myHalfCol .col-lg-6{padding:0 10px;}
+.date-style{
+    display:flex;
+    /*padding-top: 5px;*/
+}
+.seq-no{
+    display: inline-flex;
+}
 
+
+.myHalfCol .col-lg-6{padding:0 10px;}
 
 .textBox {
     height: 80px;
     width: 240px
 }
 
+.PasteBox{
+
+}
 /*.form-control {*/
     /*width: 50%;*/
     /*height: 31px;*/
@@ -26,5 +37,26 @@
 .col-xl1{
     width: 39%;
     display: flex;
+}
+.Paste-text-area{
+    width: 42%;
+}
 
+.input-search-container {
+    padding-bottom: 3%;
+}
+
+#save-button.btn-success:enabled {
+    background-color: hotpink;
+    outline-color: hotpink;
+}
+
+#reset-button.btn-primary:enabled {
+    background-color: blueviolet;
+    outline-color: blueviolet;
+}
+
+#find-button.btn-success:enabled {
+    background-color: lightsteelblue;
+    outline-color:lightsteelblue;
 }

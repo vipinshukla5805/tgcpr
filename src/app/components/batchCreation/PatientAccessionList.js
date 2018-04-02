@@ -1,40 +1,40 @@
 import React, {Component} from 'react';
 import LiveSearch from "../searchWorkOrder/LiveSearch";
 import axios from 'axios';
-let visitId;
-class VisitList extends Component {
+let patientId;
+class PatientAccessionList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            liveVisitData: [],
-            Visit: []
+            livePatientAccessionData: [],
+            PatientAccession: []
         };
         this.notifyParent = this.notifyParent.bind(this);
     }
 
     notifyParent = function (name, selectedField) {
-        for (let i = 0; i < this.state.liveVisitData.length; i++) {
-            if (selectedField[0] === this.state.liveVisitData[i].name) {
-                visitId = this.state.liveVisitData[i].id;
+        for (let i = 0; i < this.state.livePatientAccessionData.length; i++) {
+            if (selectedField[0] === this.state.livePatientAccessionData[i].name) {
+                patientId = this.state.livePatientAccessionData[i].id;
             }
         }
-        this.props.getSelectedVisitId(visitId);
+        this.props.getSelectedPatientAccessionId(patientId);
     };
 
     componentWillReceiveProps(newProps) {
-        if (!!newProps.studyId) {
-            axios.post('http://localhost:8081/gclportal/api/visits',
-                [newProps.studyId]
+        if (!!newProps.randId) {
+            axios.post('http://localhost:8081/gclportal/api/sites',
+                [newProps.randId]
             )
                 .then((res) => {
                     console.log(res.data);
-                    let Visit = [];
+                    let PatientAccession = [];
                     for (let i = 0; i < res.data.length; i++) {
-                        Visit.push(res.data[i].name);
+                        PatientAccession.push(res.data[i].name);
                     }
                     this.setState({
-                        liveVisitData: res.data,
-                        Visit
+                        livePatientAccessionData: res.data,
+                        PatientAccession
                     });
                 }, (err) => {
                     console.log(err);
@@ -45,12 +45,12 @@ class VisitList extends Component {
     render() {
         return (
             <div className="form-inline">
-                <label className="col-sm-4 col-form-label" style={styles.label}>Visit</label>
+                <label className="col-sm-4 col-form-label" style={styles.label}>Patient Accession</label>
                 <div className="col-sm-5">
                     <LiveSearch
-                        liveSearchData={this.state.Visit}
+                        liveSearchData={this.state.PatientAccession}
                         notifyParent={this.notifyParent}
-                        liveSearchDataResponse="Visit"/>
+                        liveSearchDataResponse="PatientAccession"/>
                 </div>
             </div>
         );
@@ -77,4 +77,4 @@ const styles = ({
         marginTop: '25px'
     }
 });
-export default VisitList;
+export default PatientAccessionList;

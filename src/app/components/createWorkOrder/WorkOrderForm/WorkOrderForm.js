@@ -31,7 +31,7 @@ export default class WorkOrderForm extends React.Component {
     updateWorkOrder = (barcode) => {
         console.log('here');
         axios({
-            method: 'post', url: 'http://localhost:8081/gclportal/api/workorder/saveWorkOrder',
+            method: 'post', url: 'http://xtest3.ppdi.com/gclportal/api/workorder/saveWorkOrder',
             data :  { "bioaWorkorderNo":workOrderId,
                 "barCodes":[ {
                     "barcode":this.state.barcode,
@@ -47,7 +47,7 @@ export default class WorkOrderForm extends React.Component {
     saveWorkOrder = (barcode) => {
         console.log('here');
         axios({
-            method: 'post', url: 'http://localhost:8081/gclportal/api/workorder/saveWorkOrder',
+            method: 'post', url: 'http://xtest3.ppdi.com/gclportal/api/workorder/saveWorkOrder',
             data :  { "bioaWorkorderNo":null,
                 "barCodes":[ {
                     "barcode":this.state.barcode,

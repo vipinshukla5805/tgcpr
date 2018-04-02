@@ -1,40 +1,40 @@
 import React, {Component} from 'react';
 import LiveSearch from "../searchWorkOrder/LiveSearch";
 import axios from 'axios';
-let visitId;
-class VisitList extends Component {
+let screenId;
+class ScreenIDList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            liveVisitData: [],
-            Visit: []
+            liveScreenIDData: [],
+            ScreenID: []
         };
         this.notifyParent = this.notifyParent.bind(this);
     }
 
     notifyParent = function (name, selectedField) {
-        for (let i = 0; i < this.state.liveVisitData.length; i++) {
-            if (selectedField[0] === this.state.liveVisitData[i].name) {
-                visitId = this.state.liveVisitData[i].id;
+        for (let i = 0; i < this.state.liveScreenIDData.length; i++) {
+            if (selectedField[0] === this.state.liveScreenIDData[i].name) {
+                screenId = this.state.liveScreenIDData[i].id;
             }
         }
-        this.props.getSelectedVisitId(visitId);
+        this.props.getSelectedScreenID_Id(screenId);
     };
 
     componentWillReceiveProps(newProps) {
-        if (!!newProps.studyId) {
-            axios.post('http://localhost:8081/gclportal/api/visits',
-                [newProps.studyId]
+        if (!!newProps.siteId) {
+            axios.post('http://localhost:8081/gclportal/api/screenIDs',
+                [newProps.siteId]
             )
                 .then((res) => {
                     console.log(res.data);
-                    let Visit = [];
+                    let ScreenID = [];
                     for (let i = 0; i < res.data.length; i++) {
-                        Visit.push(res.data[i].name);
+                        ScreenID.push(res.data[i].name);
                     }
                     this.setState({
-                        liveVisitData: res.data,
-                        Visit
+                        liveScreenIDData: res.data,
+                        ScreenID
                     });
                 }, (err) => {
                     console.log(err);
@@ -45,12 +45,12 @@ class VisitList extends Component {
     render() {
         return (
             <div className="form-inline">
-                <label className="col-sm-4 col-form-label" style={styles.label}>Visit</label>
+                <label className="col-sm-4 col-form-label" style={styles.label}>ScreenID</label>
                 <div className="col-sm-5">
                     <LiveSearch
-                        liveSearchData={this.state.Visit}
+                        liveSearchData={this.state.ScreenID}
                         notifyParent={this.notifyParent}
-                        liveSearchDataResponse="Visit"/>
+                        liveSearchDataResponse="ScreenID"/>
                 </div>
             </div>
         );
@@ -77,4 +77,4 @@ const styles = ({
         marginTop: '25px'
     }
 });
-export default VisitList;
+export default ScreenIDList;

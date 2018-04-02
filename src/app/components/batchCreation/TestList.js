@@ -22,15 +22,15 @@ class TestList extends Component {
     };
     componentWillReceiveProps(newProps) {
         if(!!newProps.studyId) {
-            axios.get('http://localhost:8081/gclportal/api/tests/'+ newProps.studyId)
+            axios.get('http://localhost:8081/gclportal/api/tests/30')
                 .then((res)=> {
                     console.log(res.data);
                     let testList = [];
-                    for(let i=0;i<res.data.length;i++) {
-                        testList.push(res.data[i].name);
+                    for(let i=0;i<res.data.AllRows.length;i++) {
+                        testList.push(res.data.AllRows[i].name);
                     }
                     this.setState({
-                        liveTestSearchData : res.data,
+                        liveTestSearchData : res.data.AllRows,
                         testList
                     });
                 }, (err) => {
