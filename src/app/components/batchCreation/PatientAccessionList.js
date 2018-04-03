@@ -22,18 +22,18 @@ class PatientAccessionList extends Component {
     };
 
     componentWillReceiveProps(newProps) {
-        if (!!newProps.randId) {
-            axios.post('http://localhost:8081/gclportal/api/sites',
-                [newProps.randId]
+        if (!!newProps.studyId) {
+            axios.post('http://localhost:8081/gclportal/api/patientAccessions',
+                [newProps.studyId]
             )
                 .then((res) => {
                     console.log(res.data);
                     let PatientAccession = [];
-                    for (let i = 0; i < res.data.length; i++) {
-                        PatientAccession.push(res.data[i].name);
+                    for (let i = 0; i < res.data.AllRows.length; i++) {
+                        PatientAccession.push(res.data.AllRows[i].name);
                     }
                     this.setState({
-                        livePatientAccessionData: res.data,
+                        livePatientAccessionData: res.data.AllRows,
                         PatientAccession
                     });
                 }, (err) => {
@@ -60,21 +60,6 @@ class PatientAccessionList extends Component {
 const styles = ({
     label: {
         justifyContent: 'flex-start'
-    },
-    rowTop: {
-        marginTop: '20px'
-
-    },
-    text: {
-        width:"30%",
-        height:"31px"
-    },
-    col: {
-        textAlign: 'start'
-    },
-    button: {
-        justifyContent: 'flex-end',
-        marginTop: '25px'
     }
 });
 export default PatientAccessionList;

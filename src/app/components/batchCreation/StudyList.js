@@ -21,6 +21,7 @@ class StudyList extends Component {
         this.props.getSelectedStudyId(studyId);
     };
     componentWillReceiveProps(newProps) {
+       // this.refs.StudyList.clearFields();
         if(!!newProps.sponsorId) {
             axios.get('http://localhost:8081/gclportal/api/studynumbers/'+ newProps.sponsorId)
                 .then((res)=> {
@@ -45,6 +46,7 @@ class StudyList extends Component {
                 <label className="col-sm-4 col-form-label" style={styles.label}>Studies</label>
                 <div className="col-sm-5">
                     <LiveSearch
+                        ref="StudyList"
                         liveSearchData={this.state.studyList}
                         notifyParent={this.notifyParent} liveSearchDataResponse="study"/>
                 </div>
@@ -56,21 +58,6 @@ class StudyList extends Component {
 const styles = ({
     label: {
         justifyContent: 'flex-start'
-    },
-    rowTop: {
-        marginTop: '20px'
-
-    },
-    text: {
-        width:"30%",
-        height:"31px"
-    },
-    col: {
-        textAlign: 'start'
-    },
-    button: {
-        justifyContent: 'flex-end',
-        marginTop: '25px'
     }
 });
 export default StudyList;

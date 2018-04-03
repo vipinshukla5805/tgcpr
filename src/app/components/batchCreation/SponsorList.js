@@ -7,17 +7,24 @@ class SponsorList extends Component {
         super(props);
         this.state = {
             liveSponsorSearchData : [],
-            sponsorList : []
+            sponsorList : [],
+            selected: []
         }
         this.notifyParent = this.notifyParent.bind(this);
     }
 
     notifyParent = function(name, selectedField){
-        for(let i=0;i<this.state.liveSponsorSearchData.length;i++){
-            if(selectedField[0]===this.state.liveSponsorSearchData[i].name) {
-                sponsorId = this.state.liveSponsorSearchData[i].id;
+        if(selectedField.length === 0){
+            sponsorId = '';
+          //  this.refs.SponsorList.clearFields();
+        } else {
+            for(let i=0;i<this.state.liveSponsorSearchData.length;i++){
+                if(selectedField[0]===this.state.liveSponsorSearchData[i].name) {
+                    sponsorId = this.state.liveSponsorSearchData[i].id;
+                }
             }
         }
+
         this.props.getSelectedSponsorId(sponsorId);
     };
     componentDidMount(){
@@ -43,8 +50,9 @@ class SponsorList extends Component {
                  <label className="col-sm-4 col-form-label" style={styles.label}>Sponsor</label>
                  <div className="col-sm-5">
                      <LiveSearch
+                         ref="SponsorList"
                          liveSearchData={this.state.sponsorList}
-                         notifyParent={this.notifyParent} liveSearchDataResponse="sponsor"/>
+                         notifyParent={this.notifyParent} liveSearchDataResponse="sponsor" selected={this.state.selected}/>
                  </div>
              </div>
          )
@@ -54,21 +62,6 @@ class SponsorList extends Component {
 const styles = ({
     label: {
         justifyContent: 'flex-start'
-    },
-    rowTop: {
-        marginTop: '20px'
-
-    },
-    text: {
-        width:"30%",
-        height:"31px"
-    },
-    col: {
-        textAlign: 'start'
-    },
-    button: {
-        justifyContent: 'flex-end',
-        marginTop: '25px'
     }
 });
 export default SponsorList;

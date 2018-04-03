@@ -56,21 +56,6 @@ class TestList extends Component {
 const styles = ({
     label: {
         justifyContent: 'flex-start'
-    },
-    rowTop: {
-        marginTop: '20px'
-
-    },
-    text: {
-        width:"30%",
-        height:"31px"
-    },
-    col: {
-        textAlign: 'start'
-    },
-    button: {
-        justifyContent: 'flex-end',
-        marginTop: '25px'
     }
 });
 export default TestList;

@@ -1,40 +1,40 @@
 import React, {Component} from 'react';
 import LiveSearch from "../searchWorkOrder/LiveSearch";
 import axios from 'axios';
-let siteId;
-class SiteList extends Component {
+let preDulId;
+class PreDulTestList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            liveSiteData: [],
-            Site: []
+            livePreDulTestData: [],
+            PreDulTest: []
         };
         this.notifyParent = this.notifyParent.bind(this);
     }
 
     notifyParent = function (name, selectedField) {
-        for (let i = 0; i < this.state.liveSiteData.length; i++) {
-            if (selectedField[0] === this.state.liveSiteData[i].name) {
-                siteId = this.state.liveSiteData[i].id;
+        for (let i = 0; i < this.state.livePreDulTestData.length; i++) {
+            if (selectedField[0] === this.state.livePreDulTestData[i].name) {
+                preDulId = this.state.livePreDulTestData[i].id;
             }
         }
-        this.props.getSelectedSiteId(siteId);
+        this.props.getSelectedPreDulTestId(preDulId);
     };
 
-        componentWillReceiveProps(newProps) {
+    componentWillReceiveProps(newProps) {
         if (!!newProps.studyId) {
-            axios.post('http://localhost:8081/gclportal/api/sites',
+            axios.post('http://localhost:8081/gclportal/api/dilutions',
                 [newProps.studyId]
             )
                 .then((res) => {
                     console.log(res.data);
-                    let Site = [];
-                    for (let i = 0; i < res.data.AllRows.length; i++) {
-                        Site.push(res.data.AllRows[i].name);
+                    let PreDulTest = [];
+                    for (let i = 0; i < res.data.length; i++) {
+                        PreDulTest.push(res.data[i].name);
                     }
                     this.setState({
-                        liveSiteData: res.data.AllRows,
-                        Site
+                        livePreDulTestData: res.data,
+                        PreDulTest
                     });
                 }, (err) => {
                     console.log(err);
@@ -45,12 +45,12 @@ class SiteList extends Component {
     render() {
         return (
             <div className="form-inline">
-                <label className="col-sm-4 col-form-label" style={styles.label}>Site</label>
+                <label className="col-sm-4 col-form-label" style={styles.label}>Pre-Dilution of Test</label>
                 <div className="col-sm-5">
                     <LiveSearch
-                        liveSearchData={this.state.Site}
+                        liveSearchData={this.state.PreDulTest}
                         notifyParent={this.notifyParent}
-                        liveSearchDataResponse="Site"/>
+                        liveSearchDataResponse="PreDulTest"/>
                 </div>
             </div>
         );
@@ -62,4 +62,4 @@ const styles = ({
         justifyContent: 'flex-start'
     }
 });
-export default SiteList;
+export default PreDulTestList;

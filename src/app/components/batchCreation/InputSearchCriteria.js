@@ -21,14 +21,13 @@ import SiteList from "./SiteList";
 import ScreenIDList from "./ScreenIDList";
 import RandIDList from "./RandIDList";
 import PatientAccessionList from "./PatientAccessionList";
+import PreDulTestList from "./PreDulTestList";
 import {Link} from "react-router-dom";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+
+// import { BrowserRouter as Router, Route } from "react-router-dom";
 
 const liveLocationSearchData = ["Mustard", "Ketchup", "Relish"];
-// const liveSavedSearchData = ["Save1", "Save2", "Save3", "Save4"];
 const liveStatusSearchData = ["ml", "ul", "g", "mg", "ug","ng"];
-const liveSponsorSearchData = ['a'];
-// const liveStudySearchData = ['b'];
 
 
 
@@ -42,6 +41,7 @@ class InputSearchCriteria extends Component {
             testId : '',
             vialId : '',
             SampleTypeId:'',
+            preDulId:'',
             visitId:'',
             freezerLocationId : '',
             freezerId: '',
@@ -59,6 +59,7 @@ class InputSearchCriteria extends Component {
         this.getSelectedTestId = this.getSelectedTestId.bind(this);
         this.getSelectedVialId = this.getSelectedVialId.bind(this);
         this.getSelectedSampleTypeId = this.getSelectedSampleTypeId.bind(this);
+        this.getSelectedPreDulTestId = this.getSelectedPreDulTestId(this);
         this.getSelectedVisitId = this.getSelectedVisitId.bind(this);
         this.getSelectedSiteId = this.getSelectedSiteId.bind(this);
         this.getSelectedScreenID_Id = this.getSelectedScreenID_Id.bind(this);
@@ -100,15 +101,21 @@ class InputSearchCriteria extends Component {
         this.setState({
             vialId
         });
-        this.props.router.push({
-            pathName :'/batchSearchResults',
-            state : this.state.vialId
-        })
+        // this.props.router.push({
+        //     pathName :'/batchSearchResults',
+        //     state : this.state.vialId
+        // })
     };
 
     getSelectedSampleTypeId = function( SampleType) {
         this.setState({
             SampleType
+        });
+    };
+
+    getSelectedPreDulTestId = function( preDulId) {
+        this.setState({
+            preDulId
         });
     };
 
@@ -182,9 +189,6 @@ class InputSearchCriteria extends Component {
 
         return (
             <div>
-                <Switch>
-                    <Route path="/batchSearchResults" component={BatchSearchResults} />
-                </Switch>
 
                 <Header headerTitle="Batch Creation - Input Search Criteria"/>
                 <div className="container input-search-container">
@@ -197,15 +201,7 @@ class InputSearchCriteria extends Component {
 
                             <TestList getSelectedTestId={this.getSelectedTestId} studyId={this.state.studyId}/>
 
-
-                            <div className="form-inline">
-                                 <label className="col-sm-4 col-form-label" style={styles.label}>Pre-Dul. of Tilter Test</label>
-                                <div className="col-sm-5">
-                                    <LiveSearch
-                                        liveSearchData={liveSponsorSearchData}
-                                        notifyParent={this.notifyParent}/>
-                                </div>
-                            </div>
+                            <PreDulTestList getSelectedPreDulTestId={this.getSelectedPreDulTestId} studyId={this.state.studyId}/>
 
                             <div className="form-inline">
                                 <label className="col-sm-4 col-form-label" style={styles.label}>volume|uom</label>
@@ -217,15 +213,15 @@ class InputSearchCriteria extends Component {
                                 </div>
                             </div>
 
-                            <VisitList getSelectedVisitId={this.getSelectedVisitId} studyId={this.state.studyId}/>
+                            <VisitList getSelectedVisitId={this.getSelectedVisitId} studyId={this.state.studyId} />
 
-                            <SiteList getSelectedSiteId={this.getSelectedSiteId} visitId={this.state.visitId}/>
+                            <SiteList getSelectedSiteId={this.getSelectedSiteId} studyId={this.state.studyId}/>
 
-                            <ScreenIDList getSelectedScreenID_Id={this.getSelectedScreenID_Id} siteId={this.state.siteId}/>
+                            <ScreenIDList getSelectedScreenID_Id={this.getSelectedScreenID_Id} studyId={this.state.studyId}/>
 
-                            <RandIDList getSelectedRandID_Id={this.getSelectedRandID_Id} screenId={this.state.screenId}/>
+                            <RandIDList getSelectedRandID_Id={this.getSelectedRandID_Id} studyId={this.state.studyId}/>
 
-                            <PatientAccessionList getSelectedPatientAccessionId={this.getSelectedPatientAccessionId} randId={this.state.randId}/>
+                            <PatientAccessionList getSelectedPatientAccessionId={this.getSelectedPatientAccessionId} studyId={this.state.studyId}/>
 
                             <SampleTypeList getSelectedSampleTypeId={this.getSelectedSampleTypeId} testId={this.state.testId}/>
 
@@ -331,20 +327,20 @@ class InputSearchCriteria extends Component {
                                 <div className="col-md-5" style={styles.col}>
                                     <label>Paste Box Barcodes</label>
                                 </div>
-                                <textarea class="form-control Paste-text-area"  rows="3"></textarea>
+                                <textarea className="form-control Paste-text-area"  rows="3"></textarea>
                             </div>
 
                             <div className="row" style={styles.rowTop}>
                                 <div className="col-md-5" style={styles.col}>
                                     <label>Paste Parent Barcodes</label>
                                 </div>
-                                <textarea class="form-control Paste-text-area"  rows="3"></textarea>
+                                <textarea className="form-control Paste-text-area"  rows="3"></textarea>
                             </div>
 
                             <div className="row" style={styles.rowTop}>
                                 <div className="col-md-2" style={styles.col}>
                                     <div className="form-check">
-                                        <input type="checkbox" className="form-check-input" id="exampleCheck1"></input>
+                                        <input type="checkbox" className="form-check-input"></input>
                                     </div>
                                 </div>
                                 <label className="form-check-label">Include items with open exceptions?</label>
@@ -353,7 +349,7 @@ class InputSearchCriteria extends Component {
                             <div className="row" style={styles.rowTop}>
                                 <div className="col-md-2" style={styles.col}>
                                     <div className="form-check">
-                                        <input type="checkbox" className="form-check-input" id="exampleCheck1"></input>
+                                        <input type="checkbox" className="form-check-input"></input>
                                     </div>
                                 </div>
                                 <label className="form-check-label">Only items with prerequistes met</label>
@@ -362,7 +358,7 @@ class InputSearchCriteria extends Component {
                             <div className="row" style={styles.rowTop}>
                                 <div className="col-md-2" style={styles.col}>
                                     <div className="form-check">
-                                        <input type="checkbox" className="form-check-input" id="exampleCheck1"></input>
+                                        <input type="checkbox" className="form-check-input" ></input>
                                     </div>
                                 </div>
                                 <label className="form-check-label">Only items with HI in last days</label>
@@ -391,14 +387,14 @@ class InputSearchCriteria extends Component {
                                     <button id='reset-button'className="btn btn-primary">Reset</button>
                                 </div>
                                 <div className="col-sm-2">
-                                    <button id='find-button' className="btn btn-success">
-                                        <Link to='/batchSearchResults' state={this.state.vialId}>Find</Link>
+                                    <button  className="btn btn-success">
+                                        <Link style={styles.findButton} to='/batchSearchResults' state={this.state.vialId}>Find</Link>
                                     </button>
 
 
                                 </div>
                                 <div className="col-sm-2">
-                                    <button id='save-button'className="btn btn-success ">Save</button>
+                                    <button id='save-button'className="btn btn-secondary">Save</button>
                                 </div>
                             </div>
 
@@ -424,6 +420,9 @@ const styles = ({
     SaveField:{
         marginTop:'5px',
         paddingLeft:'45px'
+    },
+    findButton:{
+        color:'white'
     },
     sequenceText:{
         width:'50%',

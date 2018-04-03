@@ -22,18 +22,18 @@ class RandIDList extends Component {
     };
 
     componentWillReceiveProps(newProps) {
-        if (!!newProps.screenId) {
+        if (!!newProps.studyId) {
             axios.post('http://localhost:8081/gclportal/api/randIDs',
-                [newProps.screenId]
+                [newProps.studyId]
             )
                 .then((res) => {
                     console.log(res.data);
                     let RandID = [];
-                    for (let i = 0; i < res.data.length; i++) {
-                        RandID.push(res.data[i].name);
+                    for (let i = 0; i < res.data.AllRows.length; i++) {
+                        RandID.push(res.data.AllRows[i].name);
                     }
                     this.setState({
-                        liveRandIDData: res.data,
+                        liveRandIDData: res.data.AllRows,
                         RandID
                     });
                 }, (err) => {
@@ -60,21 +60,6 @@ class RandIDList extends Component {
 const styles = ({
     label: {
         justifyContent: 'flex-start'
-    },
-    rowTop: {
-        marginTop: '20px'
-
-    },
-    text: {
-        width:"30%",
-        height:"31px"
-    },
-    col: {
-        textAlign: 'start'
-    },
-    button: {
-        justifyContent: 'flex-end',
-        marginTop: '25px'
     }
 });
 export default RandIDList;

@@ -26,14 +26,6 @@
     width: 240px
 }
 
-.PasteBox{
-
-}
-/*.form-control {*/
-    /*width: 50%;*/
-    /*height: 31px;*/
-/*}*/
-
 .col-xl1{
     width: 39%;
     display: flex;
@@ -46,17 +38,13 @@
     padding-bottom: 3%;
 }
 
-#save-button.btn-success:enabled {
+#save-button.btn-secondary:enabled {
     background-color: hotpink;
     outline-color: hotpink;
+
 }
 
 #reset-button.btn-primary:enabled {
     background-color: blueviolet;
     outline-color: blueviolet;
-}
-
-#find-button.btn-success:enabled {
-    background-color: lightsteelblue;
-    outline-color:lightsteelblue;
 }

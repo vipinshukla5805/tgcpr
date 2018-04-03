@@ -22,18 +22,18 @@ class ScreenIDList extends Component {
     };
 
     componentWillReceiveProps(newProps) {
-        if (!!newProps.siteId) {
+        if (!!newProps.studyId) {
             axios.post('http://localhost:8081/gclportal/api/screenIDs',
-                [newProps.siteId]
+                [newProps.studyId]
             )
                 .then((res) => {
                     console.log(res.data);
                     let ScreenID = [];
-                    for (let i = 0; i < res.data.length; i++) {
-                        ScreenID.push(res.data[i].name);
+                    for (let i = 0; i < res.data.AllRows.length; i++) {
+                        ScreenID.push(res.data.AllRows[i].name);
                     }
                     this.setState({
-                        liveScreenIDData: res.data,
+                        liveScreenIDData: res.data.AllRows,
                         ScreenID
                     });
                 }, (err) => {
@@ -60,21 +60,6 @@ class ScreenIDList extends Component {
 const styles = ({
     label: {
         justifyContent: 'flex-start'
-    },
-    rowTop: {
-        marginTop: '20px'
-
-    },
-    text: {
-        width:"30%",
-        height:"31px"
-    },
-    col: {
-        textAlign: 'start'
-    },
-    button: {
-        justifyContent: 'flex-end',
-        marginTop: '25px'
     }
 });
 export default ScreenIDList;
