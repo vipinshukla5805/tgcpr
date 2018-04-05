@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import LiveSearch from "../searchWorkOrder/LiveSearch";
 import axios from 'axios';
-let sponsorId;
+let sponsorData={}, sponsorId;
 class SponsorList extends Component {
     constructor(props) {
         super(props);
@@ -20,12 +20,12 @@ class SponsorList extends Component {
         } else {
             for(let i=0;i<this.state.liveSponsorSearchData.length;i++){
                 if(selectedField[0]===this.state.liveSponsorSearchData[i].name) {
-                    sponsorId = this.state.liveSponsorSearchData[i].id;
+                    sponsorData.id = this.state.liveSponsorSearchData[i].id;
+                    sponsorData.name = selectedField[0];
                 }
             }
         }
-
-        this.props.getSelectedSponsorId(sponsorId);
+        this.props.getSelectedSponsorData(sponsorData);
     };
     componentDidMount(){
         axios.get('http://localhost:8081/gclportal/api/getallsponsors')

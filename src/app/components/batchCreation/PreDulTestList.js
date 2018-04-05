@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import LiveSearch from "../searchWorkOrder/LiveSearch";
 import axios from 'axios';
-let preDulId;
+let preDulData={};
 class PreDulTestList extends Component {
     constructor(props) {
         super(props);
@@ -15,10 +15,11 @@ class PreDulTestList extends Component {
     notifyParent = function (name, selectedField) {
         for (let i = 0; i < this.state.livePreDulTestData.length; i++) {
             if (selectedField[0] === this.state.livePreDulTestData[i].name) {
-                preDulId = this.state.livePreDulTestData[i].id;
+                preDulData.id = this.state.livePreDulTestData[i].id;
             }
         }
-        this.props.getSelectedPreDulTestId(preDulId);
+        preDulData.name=selectedField[0];
+        this.props.getSelectedPreDulTestData(preDulData);
     };
 
     componentWillReceiveProps(newProps) {

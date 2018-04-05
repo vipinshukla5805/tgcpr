@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import LiveSearch from "../searchWorkOrder/LiveSearch";
 import axios from 'axios';
-let siteId;
+let siteData={};
 class SiteList extends Component {
     constructor(props) {
         super(props);
@@ -15,10 +15,11 @@ class SiteList extends Component {
     notifyParent = function (name, selectedField) {
         for (let i = 0; i < this.state.liveSiteData.length; i++) {
             if (selectedField[0] === this.state.liveSiteData[i].name) {
-                siteId = this.state.liveSiteData[i].id;
+                siteData.id = this.state.liveSiteData[i].id;
             }
         }
-        this.props.getSelectedSiteId(siteId);
+        siteData.name=selectedField[0];
+        this.props.getSelectedSiteData(siteData);
     };
 
         componentWillReceiveProps(newProps) {

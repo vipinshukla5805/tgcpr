@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import LiveSearch from "../searchWorkOrder/LiveSearch";
 import axios from 'axios';
-let patientId;
+let patientData={};
 class PatientAccessionList extends Component {
     constructor(props) {
         super(props);
@@ -15,10 +15,11 @@ class PatientAccessionList extends Component {
     notifyParent = function (name, selectedField) {
         for (let i = 0; i < this.state.livePatientAccessionData.length; i++) {
             if (selectedField[0] === this.state.livePatientAccessionData[i].name) {
-                patientId = this.state.livePatientAccessionData[i].id;
+                patientData.id = this.state.livePatientAccessionData[i].id;
             }
         }
-        this.props.getSelectedPatientAccessionId(patientId);
+        patientData.name=selectedField[0];
+        this.props.getSelectedPatientAccessionData(patientData);
     };
 
     componentWillReceiveProps(newProps) {

@@ -18,7 +18,14 @@
     display: inline-flex;
 }
 
+#only-item-span {
+    display: inline-block;
+    padding: 0 7px;
+}
 
+#only-item-input {
+    width: 30px;
+}
 .myHalfCol .col-lg-6{padding:0 10px;}
 
 .textBox {
@@ -47,4 +54,8 @@
 #reset-button.btn-primary:enabled {
     background-color: blueviolet;
     outline-color: blueviolet;
+}
+
+.Parent-barcode-batch-creation{
+    width: 84%;
 }

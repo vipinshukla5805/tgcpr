@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import LiveSearch from "../searchWorkOrder/LiveSearch";
 import axios from 'axios';
-let freezerRackId;
+let freezerRackData={};
 class FreezerRackList extends Component {
     constructor(props) {
         super(props);
@@ -15,10 +15,11 @@ class FreezerRackList extends Component {
     notifyParent = function (name, selectedField) {
         for (let i = 0; i < this.state.livefreezerRackData.length; i++) {
             if (selectedField[0] === this.state.livefreezerRackData[i].name) {
-                freezerRackId = this.state.livefreezerRackData[i].id;
+                freezerRackData.id = this.state.livefreezerRackData[i].id;
             }
         }
-        this.props.getSelectedFreezerRackId(freezerRackId);
+        freezerRackData.name = selectedField[0];
+        this.props.getSelectedFreezerRackData(freezerRackData);
     };
 
     componentWillReceiveProps(newProps) {

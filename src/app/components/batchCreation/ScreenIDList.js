@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import LiveSearch from "../searchWorkOrder/LiveSearch";
 import axios from 'axios';
-let screenId;
+let screenData={};
 class ScreenIDList extends Component {
     constructor(props) {
         super(props);
@@ -15,10 +15,11 @@ class ScreenIDList extends Component {
     notifyParent = function (name, selectedField) {
         for (let i = 0; i < this.state.liveScreenIDData.length; i++) {
             if (selectedField[0] === this.state.liveScreenIDData[i].name) {
-                screenId = this.state.liveScreenIDData[i].id;
+                screenData.id = this.state.liveScreenIDData[i].id;
             }
         }
-        this.props.getSelectedScreenID_Id(screenId);
+        screenData.name=selectedField[0];
+        this.props.getSelectedScreenID_Data(screenData);
     };
 
     componentWillReceiveProps(newProps) {

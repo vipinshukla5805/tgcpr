@@ -24,7 +24,7 @@ import PatientAccessionList from "./PatientAccessionList";
 import PreDulTestList from "./PreDulTestList";
 import {Link} from "react-router-dom";
 
-// import { BrowserRouter as Router, Route } from "react-router-dom";
+//import { BrowserRouter as Router, Route } from "react-router-dom";
 
 const liveLocationSearchData = ["Mustard", "Ketchup", "Relish"];
 const liveStatusSearchData = ["ml", "ul", "g", "mg", "ug","ng"];
@@ -36,40 +36,44 @@ class InputSearchCriteria extends Component {
         super(props);
         this.state = {
             startDate: moment(),
-            sponsorId : '',
-            studyId : '',
-            testId : '',
-            vialId : '',
-            SampleTypeId:'',
-            preDulId:'',
-            visitId:'',
-            freezerLocationId : '',
-            freezerId: '',
-            freezerShelfId: '',
-            freezerRackId:'',
-            freezerBoxId: '',
-            siteId:'',
-            screenId:'',
-            randId:'',
-            patientId:''
+            sponsorData: {},
+            studyData: {},
+            testData : {},
+            vialData : {},
+            SampleTypeData:{},
+            preDulData:{},
+            visitData: {},
+            freezerLocationData : {},
+            freezerData: {},
+            freezerShelfData: {},
+            freezerRackData:{},
+            freezerBoxData:{},
+            siteData:{},
+            screenData:{},
+            randData:{},
+            patientData:{},
+            INCLUDE_ITEMS_WITH_OPEN_EXCEPTIONS : false,
+            ONLY_ITEMS_WITH_PREREQUISITES_MET : false
         };
         this.notifyParent = this.notifyParent.bind(this);
-        this.getSelectedSponsorId = this.getSelectedSponsorId.bind(this);
-        this.getSelectedStudyId = this.getSelectedStudyId.bind(this);
-        this.getSelectedTestId = this.getSelectedTestId.bind(this);
-        this.getSelectedVialId = this.getSelectedVialId.bind(this);
-        this.getSelectedSampleTypeId = this.getSelectedSampleTypeId.bind(this);
-        this.getSelectedPreDulTestId = this.getSelectedPreDulTestId(this);
-        this.getSelectedVisitId = this.getSelectedVisitId.bind(this);
-        this.getSelectedSiteId = this.getSelectedSiteId.bind(this);
-        this.getSelectedScreenID_Id = this.getSelectedScreenID_Id.bind(this);
-        this.getSelectedRandID_Id = this.getSelectedRandID_Id.bind(this);
-        this.getSelectedPatientAccessionId = this.getSelectedPatientAccessionId.bind(this);
-        this.getSelectedFreezerLocationId = this.getSelectedFreezerLocationId.bind(this);
-        this.getSelectedFreezerId = this.getSelectedFreezerId.bind(this);
-        this.getSelectedFreezerShelfId = this.getSelectedFreezerShelfId.bind(this);
-        this.getSelectedFreezerRackId = this.getSelectedFreezerRackId.bind(this);
-        this.getSelectedFreezerBoxId = this.getSelectedFreezerBoxId.bind(this);
+        this.getSelectedSponsorData = this.getSelectedSponsorData.bind(this);
+        this.getSelectedStudyData = this.getSelectedStudyData.bind(this);
+        this.getSelectedTestData = this.getSelectedTestData.bind(this);
+        this.getSelectedVialData = this.getSelectedVialData.bind(this);
+        this.getSelectedSampleTypeData = this.getSelectedSampleTypeData.bind(this);
+        this.getSelectedPreDulTestData = this.getSelectedPreDulTestData(this);
+        this.getSelectedVisitData= this.getSelectedVisitData.bind(this);
+        this.getSelectedSiteData = this.getSelectedSiteData.bind(this);
+        this.getSelectedScreenID_Data = this.getSelectedScreenID_Data.bind(this);
+        this.getSelectedRandID_Data = this.getSelectedRandID_Data.bind(this);
+        this.getSelectedPatientAccessionData = this.getSelectedPatientAccessionData.bind(this);
+        this.getSelectedFreezerLocationData = this.getSelectedFreezerLocationData.bind(this);
+        this.getSelectedFreezerData = this.getSelectedFreezerData.bind(this);
+        this.getSelectedFreezerShelfData = this.getSelectedFreezerShelfData.bind(this);
+        this.getSelectedFreezerRackData = this.getSelectedFreezerRackData.bind(this);
+        this.getSelectedFreezerBoxData = this.getSelectedFreezerBoxData.bind(this);
+        this.handleIncludeItemsCheckbox = this.handleIncludeItemsCheckbox.bind(this);
+        this.handleOnlyItemsCheckbox = this.handleOnlyItemsCheckbox.bind(this);
         this.handleChange = this.handleChange.bind(this);
     }
 
@@ -79,103 +83,114 @@ class InputSearchCriteria extends Component {
         });
     }
 
-    getSelectedSponsorId = function(sponsorId) {
+    getSelectedSponsorData = function(sponsorData) {
         this.setState({
-            sponsorId
+            sponsorData
         });
     };
 
-    getSelectedStudyId = function(studyId) {
+    getSelectedStudyData = function(studyData) {
         this.setState({
-            studyId
+            studyData
         });
     };
 
-    getSelectedTestId = function(testId) {
+    getSelectedTestData = function(testData) {
         this.setState({
-            testId
+            testData
         });
     };
 
-    getSelectedVialId = function(vialId) {
+    getSelectedVialData = function(vialData) {
         this.setState({
-            vialId
+            vialData
         });
         // this.props.router.push({
         //     pathName :'/batchSearchResults',
         //     state : this.state.vialId
         // })
     };
-
-    getSelectedSampleTypeId = function( SampleType) {
+    handleOnlyItemsCheckbox = function () {
         this.setState({
-            SampleType
+            ONLY_ITEMS_WITH_PREREQUISITES_MET: !this.state.ONLY_ITEMS_WITH_PREREQUISITES_MET
         });
     };
 
-    getSelectedPreDulTestId = function( preDulId) {
+    handleIncludeItemsCheckbox = function () {
+      this.setState({
+          INCLUDE_ITEMS_WITH_OPEN_EXCEPTIONS: !this.state.INCLUDE_ITEMS_WITH_OPEN_EXCEPTIONS
+      });
+    };
+
+    getSelectedSampleTypeData = function( SampleTypeData) {
         this.setState({
-            preDulId
+            SampleTypeData
         });
     };
 
-    getSelectedVisitId = function( visitId) {
+    getSelectedPreDulTestData= function( preDulData) {
         this.setState({
-            visitId
+            preDulData
         });
     };
 
-    getSelectedSiteId = function( siteId) {
+    getSelectedVisitData = function( visitData) {
         this.setState({
-            siteId
+            visitData
         });
     };
 
-    getSelectedScreenID_Id = function( screenId) {
+    getSelectedSiteData = function( siteData) {
         this.setState({
-            screenId
+            siteData
         });
     };
 
-    getSelectedRandID_Id = function( randId) {
+    getSelectedScreenID_Data = function( screenData) {
         this.setState({
-            randId
+            screenData
         });
     };
 
-    getSelectedPatientAccessionId = function( patientId) {
+    getSelectedRandID_Data = function( randData) {
+        this.setState({
+            randData
+        });
+    };
+
+    getSelectedPatientAccessionData = function( patientData) {
         this.setState ({
-            patientId
+            patientData
         });
     };
 
-    getSelectedFreezerLocationId = function(freezerLocationId) {
+    getSelectedFreezerLocationData = function(freezerLocationData) {
         this.setState({
-            freezerLocationId
+            freezerLocationData
         });
     };
 
-    getSelectedFreezerId = function(freezerId) {
+    getSelectedFreezerData= function(freezerData) {
         this.setState({
-            freezerId
+            freezerData
         });
     };
 
-    getSelectedFreezerShelfId = function(freezerShelfId) {
+    getSelectedFreezerShelfData = function(freezerShelfData) {
         this.setState({
-            freezerShelfId
+            freezerShelfData
         });
     };
 
-    getSelectedFreezerRackId = function(freezerRackId) {
+    getSelectedFreezerRackData = function(freezerRackData) {
         this.setState({
-            freezerRackId
+            freezerRackData
         });
     };
 
-    getSelectedFreezerBoxId = function(freezerBoxId) {
+    getSelectedFreezerBoxData = function(freezerBoxData) {
         this.setState({
-            freezerBoxId
+            freezerBoxData
         });
     };
 
@@ -195,13 +210,13 @@ class InputSearchCriteria extends Component {
 
                     <div className="row">
                         <div className='col-md-6'>
-                            <SponsorList getSelectedSponsorId={this.getSelectedSponsorId}/>
+                            <SponsorList getSelectedSponsorData={this.getSelectedSponsorData}/>
 
-                            <StudyList getSelectedStudyId={this.getSelectedStudyId} sponsorId={this.state.sponsorId}/>
+                            <StudyList getSelectedStudyData={this.getSelectedStudyData} sponsorId={this.state.sponsorData.id}/>
 
-                            <TestList getSelectedTestId={this.getSelectedTestId} studyId={this.state.studyId}/>
+                            <TestList getSelectedTestData={this.getSelectedTestData} studyId={this.state.studyData.id}/>
 
-                            <PreDulTestList getSelectedPreDulTestId={this.getSelectedPreDulTestId} studyId={this.state.studyId}/>
+                            <PreDulTestList getSelectedPreDulTestData={this.getSelectedPreDulTestData} studyId={this.state.studyData.id}/>
 
                             <div className="form-inline">
                                 <label className="col-sm-4 col-form-label" style={styles.label}>volume|uom</label>
@@ -213,29 +228,29 @@ class InputSearchCriteria extends Component {
                                 </div>
                             </div>
 
-                            <VisitList getSelectedVisitId={this.getSelectedVisitId} studyId={this.state.studyId} />
+                            <VisitList getSelectedVisitData={this.getSelectedVisitData} studyId={this.state.studyData.id} />
 
-                            <SiteList getSelectedSiteId={this.getSelectedSiteId} studyId={this.state.studyId}/>
+                            <SiteList getSelectedSiteData={this.getSelectedSiteData} studyId={this.state.studyData.id}/>
 
-                            <ScreenIDList getSelectedScreenID_Id={this.getSelectedScreenID_Id} studyId={this.state.studyId}/>
+                            <ScreenIDList getSelectedScreenID_Data={this.getSelectedScreenID_Data} studyId={this.state.studyData.id}/>
 
-                            <RandIDList getSelectedRandID_Id={this.getSelectedRandID_Id} studyId={this.state.studyId}/>
+                            <RandIDList getSelectedRandID_Data={this.getSelectedRandID_Data} studyId={this.state.studyData.id}/>
 
-                            <PatientAccessionList getSelectedPatientAccessionId={this.getSelectedPatientAccessionId} studyId={this.state.studyId}/>
+                            <PatientAccessionList getSelectedPatientAccessionData={this.getSelectedPatientAccessionData} studyId={this.state.studyData.id}/>
 
-                            <SampleTypeList getSelectedSampleTypeId={this.getSelectedSampleTypeId} testId={this.state.testId}/>
+                            <SampleTypeList getSelectedSampleTypeData={this.getSelectedSampleTypeData} testId={this.state.testData.id}/>
 
-                            <VialLocationList getSelectedVialId={this.getSelectedVialId} testId={this.state.testId}/>
+                            <VialLocationList getSelectedVialData={this.getSelectedVialData} testId={this.state.testData.id}/>
 
-                            <FreezerLocationList getSelectedFreezerLocationId={this.getSelectedFreezerLocationId} testId={this.state.testId}/>
+                            <FreezerLocationList getSelectedFreezerLocationData={this.getSelectedFreezerLocationData} testId={this.state.testData.id}/>
 
-                            <FreezerList getSelectedFreezerId={this.getSelectedFreezerId} freezerLocationId={this.state.freezerLocationId}/>
+                            <FreezerList getSelectedFreezerData={this.getSelectedFreezerData} freezerLocationId={this.state.freezerLocationData.id}/>
 
-                            <FreezerShelfList getSelectedFreezerShelfId={this.getSelectedFreezerShelfId} freezerId={this.state.freezerId}/>
+                            <FreezerShelfList getSelectedFreezerShelfData={this.getSelectedFreezerShelfData} freezerId={this.state.freezerData.id}/>
 
-                            <FreezerRackList getSelectedFreezerRackId={this.getSelectedFreezerRackId} freezerShelfId={this.state.freezerShelfId}/>
+                            <FreezerRackList getSelectedFreezerRackData={this.getSelectedFreezerRackData} freezerShelfId={this.state.freezerShelfData.id}/>
 
-                            <FreezerBoxList getSelectedFreezerBoxId={this.getSelectedFreezerBoxId} freezerRackId={this.state.freezerRackId}/>
+                            <FreezerBoxList getSelectedFreezerBoxData={this.getSelectedFreezerBoxData} freezerRackId={this.state.freezerRackData.id}/>
 
 
                         </div>
@@ -251,6 +266,7 @@ class InputSearchCriteria extends Component {
                                         <label className="col-sm-3 col-form-label">From:</label>
                                         <DatePicker
                                             placeholderText="mm/dd/yyyy"
+                                            style={styles.Calender}
                                             // selected={this.state.startDate}
                                             onChange={this.handleChange}
                                         />
@@ -260,6 +276,7 @@ class InputSearchCriteria extends Component {
                                         </label>
                                         <DatePicker
                                             placeholderText="mm/dd/yyyy"
+                                            style={styles.Calender}
                                             // selected={this.state.startDate}
                                             onChange={this.handleChange}
                                         />
@@ -277,6 +294,7 @@ class InputSearchCriteria extends Component {
                                         </label>
                                         <DatePicker
                                             placeholderText="mm/dd/yyyy"
+                                            style={styles.Calender}
                                             // selected={this.state.startDate}
                                             onChange={this.handleChange}
                                         />
@@ -285,6 +303,7 @@ class InputSearchCriteria extends Component {
                                         <label className="col-sm-3 col-form-label">To:</label>
                                         <DatePicker
                                             placeholderText="mm/dd/yyyy"
+                                            style={styles.Calender}
                                             // selected={this.state.startDate}
                                             onChange={this.handleChange}
                                         />
@@ -297,7 +316,7 @@ class InputSearchCriteria extends Component {
                                     <label >Sequence Number
                                     </label>
                                 </div>
-                                <div className="col-md" style={styles.sequenceNo}>
+                                <div className="col-md-2" style={styles.sequenceNo}>
                                     <div>
                                         <div className="col-md seq-no" >
                                         <label >From:</label>
@@ -305,7 +324,7 @@ class InputSearchCriteria extends Component {
                                         </div>
                                     </div>
                                     <div>
-                                        <div className="col-md seq-no" >
+                                        <div className="col-md-2 seq-no" >
                                         <label >To:</label>
                                         <input type="text" style={styles.sequenceText} className="form-control" aria-label="Small" />
                                         </div>
@@ -315,12 +334,19 @@ class InputSearchCriteria extends Component {
 
                             <div className="row" style={styles.rowTop}>
                                 <div className="col-md-5" style={styles.col}>
-                                    <label>Parent Barcode</label>
+                                    <label> Barcodes </label>
                                 </div>
                                 <div >
-                                    <input type="text"/>
+                                    <input className="Parent-barcode-batch-creation" type="text"/>
                                     <button>Go</button>
                                 </div>
+                            </div>
+
+                            <div className="row" style={styles.rowTop}>
+                                <div className="col-md-5" style={styles.col}>
+                                    <label>Paste Barcodes</label>
+                                </div>
+                                <textarea className="form-control Paste-text-area"  rows="3"></textarea>
                             </div>
 
                             <div className="row" style={styles.rowTop}>
@@ -331,16 +357,9 @@ class InputSearchCriteria extends Component {
                             </div>
 
                             <div className="row" style={styles.rowTop}>
-                                <div className="col-md-5" style={styles.col}>
-                                    <label>Paste Parent Barcodes</label>
-                                </div>
-                                <textarea className="form-control Paste-text-area"  rows="3"></textarea>
-                            </div>
-
-                            <div className="row" style={styles.rowTop}>
                                 <div className="col-md-2" style={styles.col}>
                                     <div className="form-check">
-                                        <input type="checkbox" className="form-check-input"></input>
+                                        <input type="checkbox"  checked={this.state.INCLUDE_ITEMS_WITH_OPEN_EXCEPTIONS} onChange={this.handleIncludeItemsCheckbox}className="form-check-input"></input>
                                     </div>
                                 </div>
                                 <label className="form-check-label">Include items with open exceptions?</label>
@@ -349,7 +368,7 @@ class InputSearchCriteria extends Component {
                             <div className="row" style={styles.rowTop}>
                                 <div className="col-md-2" style={styles.col}>
                                     <div className="form-check">
-                                        <input type="checkbox" className="form-check-input"></input>
+                                        <input type="checkbox" checked={this.state.ONLY_ITEMS_WITH_PREREQUISITES_MET} onChange={this.handleOnlyItemsCheckbox} className="form-check-input"></input>
                                     </div>
                                 </div>
                                 <label className="form-check-label">Only items with prerequistes met</label>
@@ -361,7 +380,10 @@ class InputSearchCriteria extends Component {
                                         <input type="checkbox" className="form-check-input" ></input>
                                     </div>
                                 </div>
-                                <label className="form-check-label">Only items with HI in last days</label>
+                                <label className="form-check-label">Only items with HI in last
+                                    <span id="only-item-span"> <input id="only-item-input"
+                                     type="text"/></span>
+                                    days</label>
                             </div>
 
                             <div className="form-inline" style={styles.rowTop1}>
@@ -381,7 +403,6 @@ class InputSearchCriteria extends Component {
                             </div>
 
 
-
                             <div className="row" style={styles.button}>
                                 <div className="col-sm-2">
                                     <button id='reset-button'className="btn btn-primary">Reset</button>
@@ -390,8 +411,6 @@ class InputSearchCriteria extends Component {
                                     <button  className="btn btn-success">
                                         <Link style={styles.findButton} to='/batchSearchResults' state={this.state.vialId}>Find</Link>
                                     </button>
-
-
                                 </div>
                                 <div className="col-sm-2">
                                     <button id='save-button'className="btn btn-secondary">Save</button>
@@ -421,12 +440,16 @@ const styles = ({
         marginTop:'5px',
         paddingLeft:'45px'
     },
+    Calender:{
+        width:'175px'
+    },
     findButton:{
         color:'white'
     },
     sequenceText:{
-        width:'50%',
-        height: '30px'
+        width: '55px',
+        height: '30px',
+        marginLeft: '10px'
     },
     sequenceNo :{
         display:'flex',

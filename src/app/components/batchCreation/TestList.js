@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import LiveSearch from "../searchWorkOrder/LiveSearch";
 import axios from 'axios';
-let testId;
+let testData={};
 class TestList extends Component {
     constructor(props) {
         super(props);
@@ -15,10 +15,17 @@ class TestList extends Component {
     notifyParent = function(name, selectedField){
         for(let i=0;i<this.state.liveTestSearchData.length;i++){
             if(selectedField[0]===this.state.liveTestSearchData[i].name) {
-                testId = this.state.liveTestSearchData[i].id;
+                testData.id = this.state.liveTestSearchData[i].id;
+                testData.sop = this.state.liveTestSearchData[i].sop;
+                testData.testType = this.state.liveTestSearchData[i].testType;
+                testData.ikTiterType = this.state.liveTestSearchData[i].ikTiterType;
+                testData.batchFree = this.state.liveTestSearchData[i].batchFree;
+                testData.ticked = this.state.liveTestSearchData[i].ticked;
+
             }
         }
-        this.props.getSelectedTestId(testId);
+        testData.name = selectedField[0];
+        this.props.getSelectedTestData(testData);
     };
     componentWillReceiveProps(newProps) {
         if(!!newProps.studyId) {

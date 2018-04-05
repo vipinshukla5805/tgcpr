@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import LiveSearch from "../searchWorkOrder/LiveSearch";
 import axios from 'axios';
-let SampleTypeId;
+let SampleTypeData={};
 class SampleTypeList extends Component {
     constructor(props) {
         super(props);
@@ -15,10 +15,11 @@ class SampleTypeList extends Component {
     notifyParent = function(name, selectedField){
         for(let i=0;i<this.state.liveSampleTypeData.length;i++){
             if(selectedField[0]===this.state.liveSampleTypeData[i].name) {
-                SampleTypeId = this.state.liveSampleTypeData[i].id;
+                SampleTypeData.id = this.state.liveSampleTypeData[i].id;
             }
         }
-        this.props.getSelectedSampleTypeId(SampleTypeId);
+        SampleTypeData.name=selectedField[0];
+        this.props.getSelectedSampleTypeData(SampleTypeData);
     };
     componentWillReceiveProps(newProps) {
         //  if(!!newProps.testId) {

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import LiveSearch from "../searchWorkOrder/LiveSearch";
 import axios from 'axios';
-let vialLocationId;
+let vialLocationData={};
 class VialLocationList extends Component {
     constructor(props) {
         super(props);
@@ -15,12 +15,14 @@ class VialLocationList extends Component {
     notifyParent = function(name, selectedField){
         for(let i=0;i<this.state.liveVialLocationData.length;i++){
             if(selectedField[0]===this.state.liveVialLocationData[i].name) {
-                vialLocationId = this.state.liveVialLocationData[i].id;
+                vialLocationData.id = this.state.liveVialLocationData[i].id;
+                vialLocationData.name=selectedField[0];
+                vialLocationData.ticked = true;
             }
         }
-        this.props.getSelectedVialId(vialLocationId);
+        this.props.getSelectedVialData(vialLocationData);
     };
-    componentWillReceiveProps(newProps) {
+    componentDidMount() {
       //  if(!!newProps.testId) {
             axios.get('http://localhost:8081/gclportal/api/viallocation')
                 .then((res)=> {

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import LiveSearch from "../searchWorkOrder/LiveSearch";
 import axios from 'axios';
-let studyId;
+let studyData= {};
 class StudyList extends Component {
     constructor(props) {
         super(props);
@@ -15,10 +15,12 @@ class StudyList extends Component {
     notifyParent = function(name, selectedField){
         for(let i=0;i<this.state.liveStudySearchData.length;i++){
             if(selectedField[0]===this.state.liveStudySearchData[i].name) {
-                studyId = this.state.liveStudySearchData[i].id;
+                studyData.id = this.state.liveStudySearchData[i].id;
+                studyData.name=selectedField[0];
             }
         }
-        this.props.getSelectedStudyId(studyId);
+
+        this.props.getSelectedStudyData(studyData);
     };
     componentWillReceiveProps(newProps) {
        // this.refs.StudyList.clearFields();

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import LiveSearch from "../searchWorkOrder/LiveSearch";
 import axios from 'axios';
-let randId;
+let randData={};
 class RandIDList extends Component {
     constructor(props) {
         super(props);
@@ -15,10 +15,11 @@ class RandIDList extends Component {
     notifyParent = function (name, selectedField) {
         for (let i = 0; i < this.state.liveRandIDData.length; i++) {
             if (selectedField[0] === this.state.liveRandIDData[i].name) {
-                randId = this.state.liveRandIDData[i].id;
+                randData.id = this.state.liveRandIDData[i].id;
             }
         }
-        this.props.getSelectedRandID_Id(randId);
+        randData.name=selectedField[0];
+        this.props.getSelectedRandID_Data(randData);
     };
 
     componentWillReceiveProps(newProps) {
