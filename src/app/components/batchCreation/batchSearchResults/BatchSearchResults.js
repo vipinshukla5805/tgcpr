@@ -5,6 +5,7 @@ class BatchSearchResults extends Component {
     // constructor(props) {     super(props); }
 
     render() {
+        debugger
         return (
             <div>
                 <div className="jumbotron main-container">

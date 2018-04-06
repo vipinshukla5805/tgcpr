@@ -13,7 +13,6 @@
     "react-datetime-picker": "^1.2.1",
     "react-dom": "^16.2.0",
     "react-excel-workbook": "0.0.4",
-    "react-redux": "^5.0.7",
     "react-router-dom": "^4.2.2",
     "react-s-alert": "^1.4.1",
     "react-scripts": "1.1.1",
@@ -27,6 +26,7 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
-    "babel-plugin-transform-es2015-modules-amd": "^6.24.1"
+    "babel-plugin-transform-es2015-modules-amd": "^6.24.1",
+    "react-redux": "^5.0.7"
   }
 }
