@@ -23,8 +23,8 @@ import RandIDList from "./RandIDList";
 import PatientAccessionList from "./PatientAccessionList";
 import PreDulTestList from "./PreDulTestList";
 import {Link} from "react-router-dom";
-import { getBatchResult, getresult } from "../../action/batch.action"
-import { connect } from 'react-redux';
+
+
 
 //import { BrowserRouter as Router, Route } from "react-router-dom";
 
@@ -77,7 +77,7 @@ class InputSearchCriteria extends Component {
         this.handleIncludeItemsCheckbox = this.handleIncludeItemsCheckbox.bind(this);
         this.handleOnlyItemsCheckbox = this.handleOnlyItemsCheckbox.bind(this);
         this.handleChange = this.handleChange.bind(this);
-        this.findBatchResult = this.findBatchResult.bind(this);
+        //this.findBatchResult = this.findBatchResult.bind(this);
     }
 
     handleChange(date) {
@@ -203,12 +203,12 @@ class InputSearchCriteria extends Component {
     };
     // onChange = date => this.setState({date})
 
-    findBatchResult = function(){
-        getBatchResult(this.state)
-    } 
+    getResulttest(result){
+        return [];
+    }
 
     render() {
-        debugger
+        const request = this.state; 
         return (
             <div>
 
@@ -415,8 +415,8 @@ class InputSearchCriteria extends Component {
                                     <button id='reset-button'className="btn btn-primary">Reset</button>
                                 </div>
                                 <div className="col-sm-2">
-                                    <button  className="btn btn-success" onClick={this.findBatchResult()} >
-                                        <Link style={styles.findButton} params={this.props} to='/batchSearchResults' state={this.state.vialId}>Find</Link>
+                                    <button  className="btn btn-success">
+                                        <Link style={styles.findButton} to={{ pathname: '/batchSearchResults', query:{request : JSON.stringify(request)}  }}  state={this.state.vialId}>Find</Link>
                                     </button>
                                 </div>
                                 <div className="col-sm-2">
@@ -477,8 +477,5 @@ const styles = ({
 
 });
 
-const mapStateToProps = (state) => ({
-    searchresult: getresult()
-  })
 
-export default connect(mapStateToProps,{getBatchResult})(InputSearchCriteria);
+export default InputSearchCriteria;

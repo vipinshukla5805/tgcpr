@@ -1,13 +1,23 @@
 import React, {Component} from 'react';
 import './BatchSearchResults.css';
+import { connect } from 'react-redux';
+import { getBatchResult, getresult , getResultSucess} from "../../../action/batch.action";
 
 class BatchSearchResults extends Component {
-    // constructor(props) {     super(props); }
+    constructor(props) {     super(props);         
+        this.props.location && this.props.location.query ? localStorage.setItem('req',this.props.location.query.request) : '';    
+        const {result} = this.props;    
+        this.state = {
+            req : JSON.parse(localStorage.getItem('req')),
+            result : result
+        }
+    }
+    getData = (req) => {}
 
     render() {
-        debugger
         return (
             <div>
+                {this.state.result}
                 <div className="jumbotron main-container">
                     <h4 className="w3-bar w3-left">Batch Creation - Sample Search Results</h4>
                 </div>
@@ -77,4 +87,18 @@ class BatchSearchResults extends Component {
     }
 }
 
-export default BatchSearchResults;
+const mapStateToProps = (state) => {
+    return {
+      result:getBatchResult(state)
+    }
+  }
+   
+  const mapDispatchToProps = (dispatch, props, state) => {
+    return {
+      getData: () => {
+        dispatch(getBatchResult(state))
+      }
+    }
+  }
+
+export default connect(mapStateToProps,mapDispatchToProps) (BatchSearchResults);

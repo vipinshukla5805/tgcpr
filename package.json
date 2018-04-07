@@ -27,6 +27,8 @@
   },
   "devDependencies": {
     "babel-plugin-transform-es2015-modules-amd": "^6.24.1",
-    "react-redux": "^5.0.7"
+    "cross-fetch": "^2.1.0",
+    "react-redux": "^5.0.7",
+    "redux-thunk": "^2.2.0"
   }
 }

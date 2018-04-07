@@ -3,11 +3,11 @@ BATCH_RESULT_LOADING,
 BATCH_RESULT_SUCCESS,FIND_BATCH_RESULT } from '../constants/ActionTypes';
 
 const initialState = {
-    data: {test:'hellow'},
+    result: [],
     loading: false
   }
 
-  const getBatchResult = (state = initialState,action) =>{
+  export const getBatchResult = (state = initialState,action) =>{
     switch(action.type){
         case BATCH_RESULT_LOADING :
         state.loading = true;
@@ -27,4 +27,3 @@ const initialState = {
     }
   }
 
-  export default getBatchResult;
